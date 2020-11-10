@@ -1,0 +1,45 @@
+
+before_script:
+  - hostname
+  - whoami
+  - env
+
+stages:
+  - test
+  - publish
+
+test:
+  stage: test
+  only:
+    - develop
+    - master
+  script:
+    - echo "TODO"
+
+.with-dind:
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "/certs/client"
+  services:
+    - name: docker:19.03.8-dind
+      command:
+        - /bin/sh
+        - -c
+        - |
+          echo "$CI_SERVER_TLS_CA_FILE" > /etc/ssl/certs/ca-cert-gitlab.pricefx.eu.crt || exit
+          dockerd-entrypoint.sh || exit
+
+publish:
+  stage: publish
+  image: docker:19.03.8
+  only:
+    - master
+  extends: .with-dind
+  script:
+    - docker info
+    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker build --tag $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:latest
