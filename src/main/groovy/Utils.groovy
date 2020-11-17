@@ -101,20 +101,17 @@ class Utils {
         println "Found a total of ${codeIssues.size()} issues, ${severityCounts.toString()}"
     }
 
-    static void writeCodeClimateReport(List<PfxCodeIssue> allIssues) {
-        Boolean isDevEnv = new File(".idea").isDirectory()
+    static void writeCodeClimateReport(List<PfxCodeIssue> pfxCodeIssues) {
+        JsonSlurper jsonReader = new JsonSlurper();
+        File codeClimateReport = new File("codeclimate.json")
 
-        // dont write json report if idea folder (dev environment) exists or if there are no issues found
-        if (!isDevEnv && allIssues.size() > 0) {
-            JsonSlurper jsonReader = new JsonSlurper();
-            File codeClimateReport = new File("codeclimate.json")
+        // Read codeclimate file, add to end of issues list and overwrite file with all results
+        println("Appending Issues to CodeClimate Report")
 
-            // Read codeclimate file, add to end of allIssues list and overwrite file with all results
-            println("Appending Issues to CodeClimate Report")
+        List<Map> allIssuesFormatted = pfxCodeIssues.collect { it.getCodeClimateIssueFormat() }
+        List<Map> codeClimateIssues = codeClimateReport?.size() > 0 ? jsonReader.parse(codeClimateReport) as List<Map> : []
+        allIssuesFormatted.addAll(codeClimateIssues)
 
-            List<Map> codeClimateIssues = codeClimateReport?.size() > 0 ? jsonReader.parse(codeClimateReport) as List<Map> : []
-            allIssues.addAll codeClimateIssues
-            codeClimateReport.setText(new JsonBuilder(allIssues).toString().replace("},{", "},\n{"))
-        }
+        codeClimateReport.setText(new JsonBuilder(allIssuesFormatted).toString().replace("},{", "},\n{"))
     }
 }
