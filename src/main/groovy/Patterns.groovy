@@ -5,14 +5,14 @@ class Patterns {
                 new PfxIssuePattern(
                         "trace-in-repo",
                         "Don't commit traces to the repo",
-                        /(?<!isDebugMode.*\s{0,200})api\.trace/,
+                        /(?<!isDebugMode.*\s*)api\.trace/,
                         "minor",
                         "Style"
                 ),
                 new PfxIssuePattern(
                         "logging-in-repo",
                         "Don't commit logging to the repo",
-                        /(?<!isDebugMode.*\s{0,200})api\.log/,
+                        /(?<!isDebugMode.*\s*)api\.log/,
                         "major",
                         "Performance", "Style"
                 ),
