@@ -1,3 +1,4 @@
+image: maven:3.6-jdk-11
 
 before_script:
   - hostname
@@ -6,6 +7,7 @@ before_script:
 
 stages:
   - test
+  - package
   - publish
 
 test:
@@ -14,7 +16,20 @@ test:
     - develop
     - master
   script:
-    - echo "TODO"
+    - mvn clean test
+
+package:
+  stage: package
+  needs:
+    - test
+  only:
+    - develop
+    - master
+  script:
+    - mvn package
+  artifacts:
+    paths:
+      - target/distribution
 
 .with-dind:
   variables:
@@ -33,6 +48,9 @@ test:
 
 publish:
   stage: publish
+  needs:
+    - test
+    - package
   image: docker:19.03.8
   only:
     - master

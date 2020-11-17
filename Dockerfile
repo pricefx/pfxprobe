@@ -1,8 +1,7 @@
-FROM groovy:jre11
+FROM openjdk:11-slim-buster
 
-ADD src/ /var/pfxnarc
+ADD target/distribution /var/pfxnarc
 
-VOLUME /code
-WORKDIR /code
+ENV PATH=$PATH:/var/pfxnarc/bin
 
-ENTRYPOINT [ "groovy", "/var/pfxnarc/pfxnarc.groovy" ]
+CMD [ "pfxnarc" ]
