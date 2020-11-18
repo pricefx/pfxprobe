@@ -17,6 +17,9 @@ class FileUtilsTest extends Specification {
 
         expect:
         FileUtils.getFileLines(file) == [1: 0..0, 2: 0..26, 3: 27..55, 4: 56..86, 5: 87..95]
+
+        and:
+        file.delete()
     }
 
     def "File Path Matching Regular Expressions"() {
