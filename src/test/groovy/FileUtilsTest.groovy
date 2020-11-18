@@ -8,7 +8,7 @@ class FileUtilsTest extends Specification {
 
     def "File Line Reading and Caching Works Consistently"() {
         given:
-        File file = new File("temp.txt")
+        File file = new File("fileLinesTest.txt")
         file.setText("""
             This is Line 1
             This is line two
@@ -18,7 +18,7 @@ class FileUtilsTest extends Specification {
         expect:
         FileUtils.getFileLines(file) == [1: 0..0, 2: 0..26, 3: 27..55, 4: 56..86, 5: 87..95]
 
-        and:
+        cleanup:
         file.delete()
     }
 
