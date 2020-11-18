@@ -168,12 +168,21 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>gitlab-maven</id>
+            <url>https://gitlab.pricefx.eu/api/v4/projects/${env.CI_PROJECT_ID}/packages/maven</url>
+        </repository>
+    </repositories>
     <distributionManagement>
         <repository>
-            <id>pricefx.tools</id>
-            <name>Pricefx public maven artifacts</name>
-            <url>https://nexus.pricefx.net/tools</url>
+            <id>gitlab-maven</id>
+            <url>https://gitlab.pricefx.eu/api/v4/projects/${env.CI_PROJECT_ID}/packages/maven</url>
         </repository>
+        <snapshotRepository>
+            <id>gitlab-maven</id>
+            <url>https://gitlab.pricefx.eu/api/v4/projects/${env.CI_PROJECT_ID}/packages/maven</url>
+        </snapshotRepository>
     </distributionManagement>
 
 </project>
