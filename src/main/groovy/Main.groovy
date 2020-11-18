@@ -16,6 +16,7 @@ class Main {
     ]
 
     static void main(String... args) {
+        println("PfxNarc Started...")
         CommandLine cmd = CommandLineUtils.parseInputArgs(args)
 
         CopyOnWriteArrayList<PfxCodeIssue> allIssues = []
@@ -48,5 +49,7 @@ class Main {
         // Check if failure severities are defined and fail job if matching issues are found
         if (allIssues.any { issue -> severityImportance.findIndexOf { it == issue.IssuePattern.Severity } >= severityImportance.findIndexOf { it == failureSeverity } })
             throw new Exception("Found issue(s) >= $failureSeverity severity")
+
+        println("PfxNarc Finished...")
     }
 }

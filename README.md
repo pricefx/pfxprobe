@@ -34,6 +34,23 @@ pfxnarc:
       - ./codeclimate.json
 ```
 
+### Docker Container Usage
+
+Step 1. Log In your Docker client to the private pfx gitlab registry:
+- Substitute **EMAILADDRESS** with your pricefx email address
+- Substitute **ACCESSTOKEN** below with a [personal access token](https://gitlab.pricefx.eu/profile/personal_access_tokens)
+    - Access token must be granted "read_registry" privilege
+        
+This step only needs to be done once
+```
+docker login https://cregistry.pricefx.eu --username EMAILADDRESS --password ACCESSTOKEN
+```
+
+ Step 2. Run the following command from your source code parent folder
+ ```
+docker run --rm -it --name pfxnarc -v ${PWD}:/code cregistry.pricefx.eu/tools/pfxnarc -dir code
+ ```
+
 ### JAR Usage
 
 ```
