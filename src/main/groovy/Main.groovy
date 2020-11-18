@@ -1,3 +1,5 @@
+import org.apache.commons.cli.CommandLine
+
 import java.util.concurrent.CopyOnWriteArrayList
 
 class Main {
@@ -11,11 +13,10 @@ class Main {
     ]
 
     static void main(String... args) {
-
-        Map<String, List<String>> executionParams = Utils.parseInputArgs(args)
+        CommandLine cmd = CommandLineUtils.parseInputArgs(args)
 
         CopyOnWriteArrayList<PfxCodeIssue> allIssues = []
-        executionParams["from"].parallelStream().forEach { String dirPath ->
+        cmd.getOptionValues(CommandLineUtils.scanDirArg).toList().parallelStream().forEach { String dirPath ->
 
             def issuePatterns = Patterns.getPatternDictionary()
             def groovyFiles = Utils.getGroovyFilesInPath(dirPath)

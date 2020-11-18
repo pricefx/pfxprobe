@@ -1,7 +1,15 @@
 import groovy.io.FileType
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
+import org.apache.commons.cli.BasicParser
+import org.apache.commons.cli.CommandLine
+import org.apache.commons.cli.CommandLineParser
+import org.apache.commons.cli.DefaultParser
 import org.apache.commons.cli.MissingArgumentException
+import org.apache.commons.cli.MissingOptionException
+import org.apache.commons.cli.Option
+import org.apache.commons.cli.Options
+import org.apache.commons.cli.ParseException
 
 import java.security.MessageDigest
 import java.util.concurrent.ConcurrentHashMap
@@ -63,34 +71,19 @@ class Utils {
     }
 
     private static Boolean matchesSearchExclusions(File file, List<String> searchExclusions = null) {
-        return searchExclusions?.contains(file.canonicalPath)
+        String filePath = getUnixStyleFilePath(file.path)
+        Boolean matchFound = false
+        for (regexp in searchExclusions) {
+            if (filePath == regexp || filePath ==~ regexp) {
+                matchFound = true
+                break
+            }
+        }
+        return matchFound
     }
 
-    static HashMap<String, List<String>> parseInputArgs(String... args) {
-        HashMap<String, List<String>> executionParams = [:]
-        String currentKey = null
-        boolean expectingKey = true
-        for (arg in args) {
-            if (expectingKey) {
-                if (!arg.startsWith("-")) {
-                    throw new IllegalArgumentException("Malformed Args, Expected Key But Found $arg")
-                } else {
-                    currentKey = arg.substring(1, arg.length())
-                    if (!executionParams.containsKey(currentKey)) {
-                        executionParams[currentKey] = []
-                    }
-                }
-            } else {
-                executionParams[currentKey] << arg
-            }
-
-            expectingKey = !expectingKey
-        }
-
-        if (!executionParams.containsKey("from")) {
-            throw new MissingArgumentException("Application requires at least one use of -from argument to know where to scan")
-        }
-        return executionParams
+    static String getUnixStyleFilePath(String filePath) {
+        return File.separator == "\\" ? filePath.replace("\\", "/") : filePath
     }
 
     static void printIssueDiscoveriesToConsole(List<PfxCodeIssue> codeIssues) {
