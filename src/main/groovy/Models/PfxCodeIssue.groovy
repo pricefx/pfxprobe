@@ -1,29 +1,8 @@
-class PfxIssuePattern {
+package Models
 
-    public PfxIssuePattern(
-            String name,
-            String description,
-            String pattern,
-            String severity,
-            String... categories
-    ) {
-        Name = name
-        Description = description
-        Pattern = pattern
-        Severity = severity
-        Categories = categories
-    }
-
-    public String Name
-    public String Description
-    public String Pattern
-    public String Severity
-    public List<String> Categories
-
-}
+import java.security.MessageDigest
 
 class PfxCodeIssue {
-
     PfxCodeIssue(
             PfxIssuePattern pattern,
             String filePath,
@@ -47,12 +26,11 @@ class PfxCodeIssue {
     public int FileLineCharBegin
     public int FileLineCharEnd
 
-    public String getDescription(){
+    String getDescription() {
         return "[$IssuePattern.Severity] $IssuePattern.Description"
     }
 
-
-    public Map getCodeClimateIssueFormat() {
+    Map<String, Object> getCodeClimateIssueFormat() {
         return [
                 type       : "issue",
                 engine_name: "pfxnarc",
@@ -65,7 +43,16 @@ class PfxCodeIssue {
                         lines: [begin: FileLineBegin, end: FileLineEnd],
                         chars: [begin: FileLineCharBegin, end: FileLineCharEnd]
                 ],
-                fingerprint: Utils.generateIssueFingerprint(FilePath, IssuePattern.Name, IssuePattern.Description)
+                fingerprint: generateIssueFingerprint()
         ]
+    }
+
+    String generateIssueFingerprint() {
+        return generateIssueFingerprint(FilePath, IssuePattern.Name, IssuePattern.Description)
+    }
+
+    static String generateIssueFingerprint(String path, String name, String description) {
+        byte[] b = [path, name, description].bytes.flatten()
+        return MessageDigest.getInstance("MD5").digest(b).encodeHex().toString()
     }
 }

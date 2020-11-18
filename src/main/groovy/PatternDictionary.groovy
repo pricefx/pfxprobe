@@ -1,4 +1,6 @@
-class Patterns {
+import Models.PfxIssuePattern
+
+class PatternDictionary {
 
     static List<PfxIssuePattern> getPatternDictionary() {
         return [
