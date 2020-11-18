@@ -5,6 +5,10 @@ before_script:
   - whoami
   - env
 
+variables:
+  MAVEN_CLI_OPTS: "--batch-mode"
+  MAVEN_OPTS: -Dmaven.repo.local=/cache/.m2/repository
+
 stages:
   - test
   - package
@@ -16,7 +20,11 @@ test:
     - develop
     - master
   script:
-    - mvn clean test
+    - mvn clean test -e $MAVEN_CLI_OPTS
+  artifacts:
+    reports:
+      junit:
+        - ./target/surefire-reports/TEST-*.xml
 
 package:
   stage: package
@@ -30,6 +38,32 @@ package:
   artifacts:
     paths:
       - target/distribution
+
+publish-maven:
+  stage: publish
+  needs:
+    - test
+    - package
+  script:
+    - 'mvn deploy -s src/main/assembly/ci_settings.xml'
+  only:
+    - master
+
+publish-docker:
+  stage: publish
+  needs:
+    - test
+    - package
+  image: docker:19.03.8
+  only:
+    - master
+  extends: .with-dind
+  script:
+    - docker info
+    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker build --tag $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:latest
 
 .with-dind:
   variables:
@@ -45,19 +79,3 @@ package:
         - |
           echo "$CI_SERVER_TLS_CA_FILE" > /etc/ssl/certs/ca-cert-gitlab.pricefx.eu.crt || exit
           dockerd-entrypoint.sh || exit
-
-publish:
-  stage: publish
-  needs:
-    - test
-    - package
-  image: docker:19.03.8
-  only:
-    - master
-  extends: .with-dind
-  script:
-    - docker info
-    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-    - docker pull $CI_REGISTRY_IMAGE:latest || true
-    - docker build --tag $CI_REGISTRY_IMAGE:latest .
-    - docker push $CI_REGISTRY_IMAGE:latest

@@ -1,3 +1,8 @@
+import Models.PfxCodeIssue
+import Utils.CommandLineUtils
+import Utils.FileUtils
+import Utils.ReportUtils
+import org.apache.commons.cli.CommandLine
 import java.util.concurrent.CopyOnWriteArrayList
 
 class Main {
@@ -11,19 +16,19 @@ class Main {
     ]
 
     static void main(String... args) {
-
-        Map<String, List<String>> executionParams = Utils.parseInputArgs(args)
+        println("PfxNarc Started...")
+        CommandLine cmd = CommandLineUtils.parseInputArgs(args)
 
         CopyOnWriteArrayList<PfxCodeIssue> allIssues = []
-        executionParams["from"].parallelStream().forEach { String dirPath ->
+        cmd.getOptionValues(CommandLineUtils.scanDirArg).toList().parallelStream().forEach { String dirPath ->
 
-            def issuePatterns = Patterns.getPatternDictionary()
-            def groovyFiles = Utils.getGroovyFilesInPath(dirPath)
+            def issuePatterns = PatternDictionary.getPatternDictionary()
+            def groovyFiles = FileUtils.getGroovyFilesInPath(dirPath)
 
             println("PfxNarc Scanning Directory $dirPath")
             groovyFiles.parallelStream().forEach { file ->
                 issuePatterns.parallelStream().forEach { issuePattern ->
-                    allIssues.addAll(Utils.findCodeIssuesInFile(file, issuePattern))
+                    allIssues.addAll(issuePattern.findOccurrencesInFile(file))
                 }
             }
         }
@@ -37,12 +42,14 @@ class Main {
             }
         }
 
-        Utils.printIssueDiscoveriesToConsole(allIssues)
+        ReportUtils.printIssueDiscoveriesToConsole(allIssues)
 
-        Utils.writeCodeClimateReport(allIssues)
+        ReportUtils.writeCodeClimateReport(allIssues)
 
         // Check if failure severities are defined and fail job if matching issues are found
         if (allIssues.any { issue -> severityImportance.findIndexOf { it == issue.IssuePattern.Severity } >= severityImportance.findIndexOf { it == failureSeverity } })
             throw new Exception("Found issue(s) >= $failureSeverity severity")
+
+        println("PfxNarc Finished...")
     }
 }
