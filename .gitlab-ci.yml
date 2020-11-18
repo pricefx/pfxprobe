@@ -10,6 +10,7 @@ variables:
 
 stages:
   - test
+  - report
   - package
   - publish
 
@@ -21,9 +22,30 @@ test:
   script:
     - mvn clean test -e $MAVEN_CLI_OPTS
   artifacts:
+    paths:
+      - ./target/site/jacoco/jacoco.xml
     reports:
       junit:
         - ./target/surefire-reports/TEST-*.xml
+
+report-coverage:
+  stage: report
+  image: haynes/jacoco2cobertura:1.0.4
+  only:
+    - develop
+    - master
+  needs:
+    - test
+  dependencies:
+    - test
+  script:
+    # convert report from jacoco to cobertura
+    - 'python /opt/cover2cover.py target/site/jacoco/jacoco.xml src/main/java > target/site/cobertura.xml'
+    # read the <source></source> tag and prepend the path to every filename attribute
+    - 'python /opt/source2filename.py target/site/cobertura.xml'
+  artifacts:
+    reports:
+      cobertura: target/site/cobertura.xml
 
 package:
   stage: package
