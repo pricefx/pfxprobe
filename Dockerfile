@@ -6,4 +6,4 @@ ADD target/distribution /var/pfxnarc
 # add pfxnarc bin to executable path
 ENV PATH=$PATH:/var/pfxnarc/bin
 
-ENTRYPOINT [ "pfxnarc" ]
+CMD [ "pfxnarc" ]

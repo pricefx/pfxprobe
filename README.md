@@ -8,8 +8,9 @@ be used in other tools, such as Gitlab CI for tracking Resolved / Newly Introduc
 ## Distribution and Usage
 
 This project is distributed as:
-1. A [Docker Container](https://gitlab.pricefx.eu/tools/pfxnarc/container_registry)
-1. A [Maven Package / Executable JAR](https://gitlab.pricefx.eu/tools/pfxnarc/-/packages)
+1. [Docker Container](https://gitlab.pricefx.eu/tools/pfxnarc/container_registry)
+1. [Maven Package / Executable JAR](https://gitlab.pricefx.eu/tools/pfxnarc/-/packages)
+1. [Executable Binaries](https://gitlab.pricefx.eu/tools/pfxnarc/-/jobs/artifacts/master/browse/target/distribution?job=package)
 
 ### Gitlab CI Usage
 ##### Add the following to your *.gilab-ci.yml* file:
@@ -46,10 +47,11 @@ This step only needs to be done once
 docker login https://cregistry.pricefx.eu --username EMAILADDRESS --password ACCESSTOKEN
 ```
 
- Step 2. Run the following command from your source code parent folder
- ```
-docker run --rm -it --name pfxnarc -v ${PWD}:/code cregistry.pricefx.eu/tools/pfxnarc -dir code
- ```
+Step 2. Run the following command from your source code parent folder (with Bash or PowerShell - NOT CMD)
+
+```
+docker run --rm -it --name pfxnarc -v ${PWD}:/code cregistry.pricefx.eu/tools/pfxnarc bash pfxnarc -dir code
+```
 
 ### JAR Usage
 
