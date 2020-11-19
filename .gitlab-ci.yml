@@ -17,6 +17,7 @@ stages:
 test:
   stage: test
   only:
+    - merge_requests
     - develop
     - master
   script:
@@ -32,6 +33,7 @@ report-coverage:
   stage: report
   image: haynes/jacoco2cobertura:1.0.4
   only:
+    - merge_requests
     - develop
     - master
   needs:
@@ -44,6 +46,8 @@ report-coverage:
     # read the <source></source> tag and prepend the path to every filename attribute
     - 'python /opt/source2filename.py target/site/cobertura.xml'
   artifacts:
+    paths:
+      - target/site
     reports:
       cobertura: target/site/cobertura.xml
 
