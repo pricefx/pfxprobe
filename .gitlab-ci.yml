@@ -41,15 +41,12 @@ report-coverage:
   dependencies:
     - test
   script:
-    # convert report from jacoco to cobertura
-    - 'python /opt/cover2cover.py target/site/jacoco/jacoco.xml src/main/java > target/site/cobertura.xml'
-    # read the <source></source> tag and prepend the path to every filename attribute
-    - 'python /opt/source2filename.py target/site/cobertura.xml'
+    - python /opt/cover2cover.py target/site/jacoco/jacoco.xml src/main/groovy > target/site/coverage.xml
+    - python /opt/source2filename.py target/site/coverage.xml
+    - sed -i "s=<source>.*</source>=<source>./</source>=g" target/site/coverage.xml
   artifacts:
-    paths:
-      - target/site
     reports:
-      cobertura: target/site/cobertura.xml
+      cobertura: target/site/coverage.xml
 
 package:
   stage: package
