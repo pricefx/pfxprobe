@@ -45,8 +45,11 @@ report-coverage:
     - python /opt/source2filename.py target/site/coverage.xml
     - sed -i "s=<source>.*</source>=<source>./</source>=g" target/site/coverage.xml
   artifacts:
+    paths:
+      - target/site/coverage.xml
     reports:
       cobertura: target/site/coverage.xml
+  coverage: /<coverage.*line-rate="(\d+.?\d*)/
 
 package:
   stage: package
