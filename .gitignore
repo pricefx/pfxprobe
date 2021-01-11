@@ -1,5 +1,4 @@
 .idea
 target
 codeclimate.json
-
-pfxnarc.iml
+*.iml

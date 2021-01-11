@@ -1,9 +1,9 @@
 FROM openjdk:11-slim-buster
 
 # copy built distribution files to image
-ADD target/distribution /var/pfxnarc
+ADD target/distribution /var/pfxprobe
 
-# add pfxnarc bin to executable path
-ENV PATH=$PATH:/var/pfxnarc/bin
+# add pfxprobe bin to executable path
+ENV PATH=$PATH:/var/pfxprobe/bin
 
-CMD [ "pfxnarc" ]
+CMD [ "pfxprobe" ]

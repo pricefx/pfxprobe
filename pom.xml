@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.pricefx.tools</groupId>
-    <artifactId>pfxnarc</artifactId>
+    <artifactId>pfxprobe</artifactId>
     <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
     <name>${project.artifactId}</name>
@@ -160,7 +160,7 @@
                     <tempDirectory>temp</tempDirectory>
                     <programs>
                         <program>
-                            <id>pfxnarc</id>
+                            <id>pfxprobe</id>
                             <platforms>
                                 <platform>windows</platform>
                                 <platform>unix</platform>

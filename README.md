@@ -1,5 +1,5 @@
-# PfxNarc
-**pfxnarc** is a command line tool that is designed to scan a PriceFx configuration codebase and report
+# pfxprobe
+**pfxprobe** is a command line tool that is designed to scan a PriceFx configuration codebase and report
 commonly known malpractices recommended improvements. It is based loosely on [CodeClimate](https://github.com/codeclimate/codeclimate).
 
 This tool will search for issues in the provided directories and generate a *codeclimate.json* report which can then
@@ -8,9 +8,9 @@ be used in other tools, such as Gitlab CI for tracking Resolved / Newly Introduc
 ## Distribution and Usage
 
 This project is distributed as:
-1. [Docker Container](https://gitlab.pricefx.eu/tools/pfxnarc/container_registry)
-1. [Maven Package / Executable JAR](https://gitlab.pricefx.eu/tools/pfxnarc/-/packages)
-1. [Executable Binaries](https://gitlab.pricefx.eu/tools/pfxnarc/-/jobs/artifacts/master/browse/target/distribution?job=package)
+1. [Docker Container](https://gitlab.pricefx.eu/tools/pfxprobe/container_registry)
+1. [Maven Package / Executable JAR](https://gitlab.pricefx.eu/tools/pfxprobe/-/packages)
+1. [Executable Binaries](https://gitlab.pricefx.eu/tools/pfxprobe/-/jobs/artifacts/master/browse/target/distribution?job=package)
 
 ### Gitlab CI Usage
 ##### Add the following to your *.gilab-ci.yml* file:
@@ -19,14 +19,14 @@ This project is distributed as:
 stages:
   - analyze
 
-pfxnarc:
-  image: cregistry.pricefx.eu/tools/pfxnarc
+pfxprobe:
+  image: cregistry.pricefx.eu/tools/pfxprobe
   stage: analyze
   only:
     - develop
     - merge_requests
   script:
-    - pfxnarc -dir .
+    - pfxprobe -dir .
   artifacts:
     when: always
     reports:
@@ -50,19 +50,19 @@ docker login https://cregistry.pricefx.eu --username EMAILADDRESS --password ACC
 Step 2. Run the following command from your source code parent folder (with Bash or PowerShell - NOT CMD)
 
 ```
-docker run --rm -it --name pfxnarc -v ${PWD}:/code cregistry.pricefx.eu/tools/pfxnarc bash pfxnarc -dir code
+docker run --rm -it --name pfxprobe -v ${PWD}:/code cregistry.pricefx.eu/tools/pfxprobe bash pfxprobe -dir code
 ```
 
 ### JAR Usage
 
 ```
-usage: java -jar pfxnarc.jar -dir <arg>
+usage: java -jar pfxprobe.jar -dir <arg>
  -dir <arg>   Directories to be scanned
 ```
 
 ### CLI Usage
 
 ```
-usage: pfxnarc -dir <arg>
+usage: pfxprobe -dir <arg>
  -dir <arg>   Directories to be scanned
 ```

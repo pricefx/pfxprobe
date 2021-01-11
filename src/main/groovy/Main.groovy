@@ -16,7 +16,7 @@ class Main {
     ]
 
     static void main(String... args) {
-        println("PfxNarc Started...")
+        println("pfxprobe Started...")
         CommandLine cmd = CommandLineUtils.parseInputArgs(args)
 
         CopyOnWriteArrayList<PfxCodeIssue> allIssues = []
@@ -25,7 +25,7 @@ class Main {
             def issuePatterns = PatternDictionary.getPatternDictionary()
             def groovyFiles = FileUtils.getGroovyFilesInPath(dirPath)
 
-            println("PfxNarc Scanning Directory $dirPath")
+            println("pfxprobe Scanning Directory $dirPath")
             groovyFiles.parallelStream().forEach { file ->
                 issuePatterns.parallelStream().forEach { issuePattern ->
                     allIssues.addAll(issuePattern.findOccurrencesInFile(file))
@@ -50,6 +50,6 @@ class Main {
         if (allIssues.any { issue -> severityImportance.findIndexOf { it == issue.IssuePattern.Severity } >= severityImportance.findIndexOf { it == failureSeverity } })
             throw new Exception("Found issue(s) >= $failureSeverity severity")
 
-        println("PfxNarc Finished...")
+        println("pfxprobe Finished...")
     }
 }

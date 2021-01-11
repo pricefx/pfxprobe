@@ -33,7 +33,7 @@ class PfxCodeIssue {
     Map<String, Object> getCodeClimateIssueFormat() {
         return [
                 type       : "issue",
-                engine_name: "pfxnarc",
+                engine_name: "pfxprobe",
                 check_name : IssuePattern.Name,
                 description: getDescription(),
                 severity   : IssuePattern.Severity,

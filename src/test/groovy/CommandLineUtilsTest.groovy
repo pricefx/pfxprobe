@@ -4,7 +4,7 @@ import org.apache.commons.cli.UnrecognizedOptionException
 import spock.lang.Specification
 
 class CommandLineUtilsTest extends Specification {
-    static String helpMessage = "usage: pfxnarc -dir <arg>${System.lineSeparator()} -dir <arg>   Directories to be scanned${System.lineSeparator()}"
+    static String helpMessage = "usage: pfxprobe -dir <arg>${System.lineSeparator()} -dir <arg>   Directories to be scanned${System.lineSeparator()}"
 
     def "Command Line Help Message Hasn't Changed"() {
         when:

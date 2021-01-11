@@ -24,7 +24,7 @@ class CommandLineUtils {
         HelpFormatter helpFormatter = new HelpFormatter()
         String header = ""
         String footer = ""
-        helpFormatter.printHelp("pfxnarc", header, getParserOptions(), footer, true)
+        helpFormatter.printHelp("pfxprobe", header, getParserOptions(), footer, true)
     }
 
     static CommandLine parseInputArgs(String... args) throws ParseException, MissingOptionException {

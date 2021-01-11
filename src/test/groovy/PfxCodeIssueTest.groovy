@@ -32,7 +32,7 @@ class PfxCodeIssueTest extends Specification {
                 15,
                 40
         )
-        Map expectedIssueFormat = [type: "issue", engine_name: "pfxnarc", check_name: "Some Issue Pattern", description: "[blocker] Pattern Description", severity: "blocker", categories: [], location: [path: "/var/some/path", lines: [begin: 0, end: 10], chars: [begin: 15, end: 40]], fingerprint: "b35193b423e3f3635638665377767678"]
+        Map expectedIssueFormat = [type: "issue", engine_name: "pfxprobe", check_name: "Some Issue Pattern", description: "[blocker] Pattern Description", severity: "blocker", categories: [], location: [path: "/var/some/path", lines: [begin: 0, end: 10], chars: [begin: 15, end: 40]], fingerprint: "b35193b423e3f3635638665377767678"]
 
         expect:
         codeIssue.getCodeClimateIssueFormat() == expectedIssueFormat
