@@ -66,3 +66,7 @@ usage: java -jar pfxprobe.jar -dir <arg>
 usage: pfxprobe -dir <arg>
  -dir <arg>   Directories to be scanned
 ```
+
+### Attributions
+
+* [Original project avatar image rights](https://www.flaticon.com/authors/icongeek26) 
