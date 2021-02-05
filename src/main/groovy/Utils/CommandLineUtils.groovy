@@ -10,17 +10,24 @@ import org.apache.commons.cli.Options
 import org.apache.commons.cli.ParseException
 
 class CommandLineUtils {
-    static String scanDirArg = "dir"
-    private static Options getParserOptions(){
-        Options options = new Options();
-        Option fromInput = new Option(scanDirArg, true, "Directories to be scanned")
-        fromInput.setRequired(true)
-        options.addOption(fromInput)
+    static String probeAnalysisArg = "p"
+    static String probeScanDirArg = "dir"
+    static String narcAnalysisArg = "n"
+    static String narcRulesFileArg = "rulefile"
 
-        return options
+    private static Options getParserOptions() {
+        Option probeAnalysis = new Option(probeAnalysisArg, false, "Execute pfxprobe analysis")
+        Option scanDir = new Option(probeScanDirArg, true, "Directories to be scanned by pfxprobe rules")
+        Option narcAnalysis = new Option(narcAnalysisArg, false, "Execute CodeNarc analysis")
+        Option narcRulesFile = new Option(narcRulesFileArg, true, "(Optional) Relative path to ruleset file. If not passed, default Accelerator ruleset will be used")
+
+        return new Options().addOption(probeAnalysis)
+                .addOption(scanDir)
+                .addOption(narcAnalysis)
+                .addOption(narcRulesFile)
     }
 
-    static void printInputArgsHelp(){
+    static void printInputArgsHelp() {
         HelpFormatter helpFormatter = new HelpFormatter()
         String header = ""
         String footer = ""
@@ -32,10 +39,9 @@ class CommandLineUtils {
         try {
             return parser.parse(getParserOptions(), args)
         }
-        catch(Exception e){
+        catch (Exception e) {
             printInputArgsHelp()
             throw e
         }
     }
-
 }

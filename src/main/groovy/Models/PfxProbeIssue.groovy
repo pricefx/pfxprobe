@@ -1,10 +1,8 @@
 package Models
 
-import java.security.MessageDigest
-
-class PfxCodeIssue {
-    PfxCodeIssue(
-            PfxIssuePattern pattern,
+class PfxProbeIssue extends CodeClimateIssue {
+    PfxProbeIssue(
+            PfxProbeIssuePattern pattern,
             String filePath,
             int fileLineBegin,
             int fileLineEnd,
@@ -19,15 +17,19 @@ class PfxCodeIssue {
         FileLineCharEnd = fileLineCharEnd
     }
 
-    public PfxIssuePattern IssuePattern
+    public PfxProbeIssuePattern IssuePattern
     public String FilePath
     public int FileLineBegin
     public int FileLineEnd
     public int FileLineCharBegin
     public int FileLineCharEnd
 
-    String getDescription() {
+    String getIssueDescription() {
         return "[$IssuePattern.Severity] $IssuePattern.Description"
+    }
+
+    String getIssueSeverity() {
+        IssuePattern.Severity
     }
 
     Map<String, Object> getCodeClimateIssueFormat() {
@@ -35,7 +37,7 @@ class PfxCodeIssue {
                 type       : "issue",
                 engine_name: "pfxprobe",
                 check_name : IssuePattern.Name,
-                description: getDescription(),
+                description: getIssueDescription(),
                 severity   : IssuePattern.Severity,
                 categories : IssuePattern.Categories,
                 location   : [
@@ -43,16 +45,7 @@ class PfxCodeIssue {
                         lines: [begin: FileLineBegin, end: FileLineEnd],
                         chars: [begin: FileLineCharBegin, end: FileLineCharEnd]
                 ],
-                fingerprint: generateIssueFingerprint()
+                fingerprint: generateIssueFingerprint(FilePath, IssuePattern.Name, IssuePattern.Description)
         ]
-    }
-
-    String generateIssueFingerprint() {
-        return generateIssueFingerprint(FilePath, IssuePattern.Name, IssuePattern.Description)
-    }
-
-    static String generateIssueFingerprint(String path, String name, String description) {
-        byte[] b = [path, name, description].bytes.flatten()
-        return MessageDigest.getInstance("MD5").digest(b).encodeHex().toString()
     }
 }

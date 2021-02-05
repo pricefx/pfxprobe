@@ -1,13 +1,12 @@
-import Models.PfxCodeIssue
-import Models.PfxIssuePattern
+import Models.PfxProbeIssue
+import Models.PfxProbeIssuePattern
 import spock.lang.Specification
-import spock.lang.Unroll
 
-class PfxCodeIssueTest extends Specification {
+class PfxProbeIssueTest extends Specification {
 
     def "Issue Fingerprint Generator Works Consistently"() {
         expect:
-        PfxCodeIssue.generateIssueFingerprint(path, name, description) == hash
+        PfxProbeIssue.generateIssueFingerprint(path, name, description) == hash
 
         where:
         path                           | name            | description        || hash
@@ -18,13 +17,13 @@ class PfxCodeIssueTest extends Specification {
 
     def "Code Issue Can Generate Correct CodeClimate Issue Map Structure"() {
         given:
-        PfxIssuePattern issuePattern = new PfxIssuePattern(
+        PfxProbeIssuePattern issuePattern = new PfxProbeIssuePattern(
                 "Some Issue Pattern",
                 "Pattern Description",
                 /.*abc.*/,
                 "blocker"
         )
-        PfxCodeIssue codeIssue = new PfxCodeIssue(
+        PfxProbeIssue codeIssue = new PfxProbeIssue(
                 issuePattern,
                 "/var/some/path",
                 0,
