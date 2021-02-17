@@ -6,11 +6,11 @@ import org.codenarc.CodeNarc
 
 class CodeNarcUtils {
 
-    static String defaultRulesFileRelativePath = "codenarc.ruleset"
-    static String jsonCodeReportFileName = 'CodeNarcCodeJsonReport.json'
-    static String jsonTestsReportFileName = 'CodeNarcTestsJsonReport.json'
+    final static String defaultRulesFileRelativePath = "codenarc.ruleset"
+    final static String jsonCodeReportFileName = 'CodeNarcCodeJsonReport.json'
+    final static String jsonTestsReportFileName = 'CodeNarcTestsJsonReport.json'
 
-    static ArrayList<CodeNarcIssue> getCodeNarcIssues(String userRulesFileRelativePath) {
+    static List<CodeNarcIssue> getCodeNarcIssues(String userRulesFileRelativePath) {
         println("Starting codeNarc analysis")
         runAnalysis(userRulesFileRelativePath)
 
@@ -27,22 +27,37 @@ class CodeNarcUtils {
     private static void runAnalysis(String userRulesFileRelativePath) {
         String rulesFileRelativePath = userRulesFileRelativePath ?: defaultRulesFileRelativePath
 
-        // Because the workdir of the image is /, it tries to check each and every file in the image which takes really long time.
+        // Because the workdir of the image can be /, it tries to check each and every file in the image which takes really long time.
         // This is why report from code and from tests is generated independently.
-        CodeNarc.main("-rulesetfiles=file:$rulesFileRelativePath", '-basedir=/CalculationLogic', "-report=json:$jsonCodeReportFileName")
-        CodeNarc.main("-rulesetfiles=file:$rulesFileRelativePath", '-basedir=/CalculationLogicTest', "-report=json:$jsonTestsReportFileName")
+        safeExecuteAnalysisForDir(rulesFileRelativePath, './CalculationLogic')
+        safeExecuteAnalysisForDir(rulesFileRelativePath, './CalculationLogicTest')
+    }
+
+    private static void safeExecuteAnalysisForDir(String rulesFileRelativePath, String baseDir) {
+        try {
+            if (doesFileExist(baseDir)) {
+                // CodeNarc throws System.exit() if the basedir cannot be found, so we must make sure it's there
+                CodeNarc.main("-rulesetfiles=file:$rulesFileRelativePath", "-basedir=$baseDir", "-report=json:$jsonCodeReportFileName")
+            } else {
+                println("Basedir [$baseDir] doesn't exist in the workspace")
+            }
+        } catch (any) {
+            println("There was a problem with generating report for [$baseDir] directory. Skipping analysis...")
+            any.printStackTrace()
+        }
     }
 
     // TODO - tests
-    private static ArrayList<CodeNarcIssue> parseReport(String fileName) {
+    private static List<CodeNarcIssue> parseReport(String fileName) {
         Map codeNarcReport = readReport(fileName)
-        println("Report parsed")
+        println("Report [$fileName] parsed")
 
-        if (!isAnyViolationFound(codeNarcReport)) {
+        if (!codeNarcReport || !isAnyViolationFound(codeNarcReport)) {
             println("No violations found")
             return []
         }
 
+        // TODO - Try to refactor in a simpler way with .collect(). Write tests first.
         return codeNarcReport.packages.inject([]) { List results, Map pathReport ->
             pathReport.files?.each { Map fileReport ->
                 String filePath = "${pathReport.path}/${fileReport.name}"
@@ -58,12 +73,23 @@ class CodeNarcUtils {
     }
 
     private static Map readReport(String fileName) {
-        return new JsonSlurper().parse(new File(fileName))
+        Map report = [:]
+        if (doesFileExist(fileName)) {
+            report = new JsonSlurper().parse(new File(fileName))
+        } else {
+            println("Report [$fileName] was not generated. Skipping...")
+        }
+
+        return report
     }
 
     private static boolean isAnyViolationFound(Map codeNarcReport) {
         int filesWithViolations = codeNarcReport?.summary?.filesWithViolations
 
         return filesWithViolations > 0
+    }
+
+    static boolean doesFileExist(String filePath) {
+        return new File(filePath).exists()
     }
 }

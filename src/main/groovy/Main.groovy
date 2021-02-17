@@ -21,7 +21,6 @@ class Main {
                 CodeNarcUtils.getCodeNarcIssues(cmd.getOptionValue(CommandLineUtils.narcRulesFileArg)) :
                 []
 
-        // TODO Sorting is failing at some point. Write some tests and check it out
         ArrayList<CodeClimateIssue> allIssues = (codeNarcIssues + pfxProbeIssues).sort()
 
         ReportUtils.printIssueDiscoveriesToConsole(allIssues)

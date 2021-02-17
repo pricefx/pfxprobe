@@ -19,11 +19,11 @@ class PfxProbeIssuePattern {
         Categories = categories
     }
 
-    public String Name
-    public String Description
-    public String Pattern
-    public String Severity
-    public List<String> Categories
+    String Name
+    String Description
+    String Pattern
+    String Severity
+    List<String> Categories
 
     List<PfxProbeIssue> findOccurrencesInFile(File file) {
         List<PfxProbeIssue> allIssues = []

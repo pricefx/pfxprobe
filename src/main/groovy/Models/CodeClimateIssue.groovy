@@ -3,7 +3,7 @@ package Models
 import java.security.MessageDigest
 
 abstract class CodeClimateIssue implements Comparable {
-    static String[] severityImportance = [
+    final static String[] severityImportance = [
             "info",
             "minor",
             "major",
@@ -11,7 +11,7 @@ abstract class CodeClimateIssue implements Comparable {
             "blocker"
     ]
 
-    static String failureSeverity = "blocker"
+    final static String failureSeverity = "blocker"
 
     abstract String getIssueDescription()
 
@@ -31,16 +31,16 @@ abstract class CodeClimateIssue implements Comparable {
     int compareTo(Object o) {
         CodeClimateIssue compared = o as CodeClimateIssue
 
-        int thisIndex = severityImportance.findIndexOf {
+        int thisSeverityIndex = severityImportance.findIndexOf {
             it == this.getIssueSeverity()
         }
+        String thisIndexedDescription = "$thisSeverityIndex${getIssueDescription()}"
 
-        int comparedIndex = severityImportance.findIndexOf {
+        int comparedSeverityIndex = severityImportance.findIndexOf {
             it == compared.getIssueSeverity()
         }
+        String comparedIndexedDescription = "$comparedSeverityIndex${compared.getIssueDescription()}"
 
-        return thisIndex != comparedIndex ?
-                comparedIndex <=> thisIndex :
-                compared.getIssueDescription() <=> getIssueDescription()
+        return thisIndexedDescription <=> comparedIndexedDescription
     }
 }

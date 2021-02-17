@@ -10,10 +10,10 @@ import org.apache.commons.cli.Options
 import org.apache.commons.cli.ParseException
 
 class CommandLineUtils {
-    static String probeAnalysisArg = "p"
-    static String probeScanDirArg = "dir"
-    static String narcAnalysisArg = "n"
-    static String narcRulesFileArg = "rulefile"
+    final static String probeAnalysisArg = "p"
+    final static String probeScanDirArg = "dir"
+    final static String narcAnalysisArg = "n"
+    final static String narcRulesFileArg = "rulefile"
 
     private static Options getParserOptions() {
         Option probeAnalysis = new Option(probeAnalysisArg, false, "Execute pfxprobe analysis")

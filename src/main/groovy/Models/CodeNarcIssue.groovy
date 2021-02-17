@@ -4,38 +4,41 @@ class CodeNarcIssue extends CodeClimateIssue {
     CodeNarcIssue(
             String ruleName,
             String filePath,
-            int severity,
+            int issueSeverity,
             int fileLine,
             String message
     ) {
         RuleName = ruleName
         FilePath = filePath
-        Severity = parseCodeNarcSeverity(severity)
+        IssueSeverity = parseCodeNarcSeverity(issueSeverity)
         FileLine = fileLine
         Message = message
     }
 
-    public String RuleName
-    public String FilePath
-    public String Severity
-    public int FileLine
-    public String Message
+    String RuleName
+    String FilePath
+    String IssueSeverity
+    int FileLine
+    String Message
 
+    @Override
     String getIssueDescription() {
-        return "[$Severity] $Message"
+        return "[$IssueSeverity] $Message"
     }
 
+    @Override
     String getIssueSeverity() {
-        return Severity
+        return IssueSeverity
     }
 
+    @Override
     Map<String, Object> getCodeClimateIssueFormat() {
         return [
                 type       : "issue",
                 engine_name: "codenarc",
                 check_name : RuleName,
                 description: getIssueDescription(),
-                severity   : Severity,
+                severity   : IssueSeverity,
                 categories : null,
                 location   : [
                         path : FilePath,

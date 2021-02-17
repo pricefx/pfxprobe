@@ -17,21 +17,24 @@ class PfxProbeIssue extends CodeClimateIssue {
         FileLineCharEnd = fileLineCharEnd
     }
 
-    public PfxProbeIssuePattern IssuePattern
-    public String FilePath
-    public int FileLineBegin
-    public int FileLineEnd
-    public int FileLineCharBegin
-    public int FileLineCharEnd
+    PfxProbeIssuePattern IssuePattern
+    String FilePath
+    int FileLineBegin
+    int FileLineEnd
+    int FileLineCharBegin
+    int FileLineCharEnd
 
+    @Override
     String getIssueDescription() {
         return "[$IssuePattern.Severity] $IssuePattern.Description"
     }
 
+    @Override
     String getIssueSeverity() {
         IssuePattern.Severity
     }
 
+    @Override
     Map<String, Object> getCodeClimateIssueFormat() {
         return [
                 type       : "issue",

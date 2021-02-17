@@ -6,7 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 class PfxProbeUtils {
 
-    static ArrayList<PfxProbeIssue> getPfxProbeIssues(String[] scanDirs) {
+    static List<PfxProbeIssue> getPfxProbeIssues(String[] scanDirs) {
         CopyOnWriteArrayList<PfxProbeIssue> pfxProbeIssues = []
 
         scanDirs.toList().parallelStream().forEach { String dirPath ->
