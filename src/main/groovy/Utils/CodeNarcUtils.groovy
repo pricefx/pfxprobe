@@ -8,49 +8,44 @@ class CodeNarcUtils {
 
     final static String defaultRulesFileRelativePath = "codenarc.ruleset"
     final static String jsonCodeReportFileName = 'CodeNarcCodeJsonReport.json'
-    final static String jsonTestsReportFileName = 'CodeNarcTestsJsonReport.json'
 
-    static List<CodeNarcIssue> getCodeNarcIssues(String userRulesFileRelativePath) {
+    static List<CodeNarcIssue> getCodeNarcIssues(String[] scanDirs, String userRulesFileRelativePath) {
         println("Starting codeNarc analysis")
-        runAnalysis(userRulesFileRelativePath)
+        runAnalysis(scanDirs?.getAt(0), userRulesFileRelativePath) // TODO - we can scan only one directory with codeNarc
 
-        ArrayList<CodeNarcIssue> codeNarcCodeIssues = parseReport(jsonCodeReportFileName) ?: []
-        ArrayList<CodeNarcIssue> codeNarcTestsIssues = parseReport(jsonTestsReportFileName) ?: []
+        ArrayList<CodeNarcIssue> codeNarcCodeIssues = parseReport() ?: []
 
-        return codeNarcCodeIssues + codeNarcTestsIssues
+        return codeNarcCodeIssues
     }
 
     /**
      * We assume that image runs in repository with PFX Studio file structure
      * @param userRulesFileRelativePath
      */
-    private static void runAnalysis(String userRulesFileRelativePath) {
+    private static void runAnalysis(String scanDir, String userRulesFileRelativePath) {
         String rulesFileRelativePath = userRulesFileRelativePath ?: defaultRulesFileRelativePath
 
-        // Because the workdir of the image can be /, it tries to check each and every file in the image which takes really long time.
-        // This is why report from code and from tests is generated independently.
-        safeExecuteAnalysisForDir(rulesFileRelativePath, './CalculationLogic')
-        safeExecuteAnalysisForDir(rulesFileRelativePath, './CalculationLogicTest')
+        safeExecuteAnalysisForDir(rulesFileRelativePath, scanDir)
     }
 
-    private static void safeExecuteAnalysisForDir(String rulesFileRelativePath, String baseDir) {
+    private static void safeExecuteAnalysisForDir(String rulesFileRelativePath, String scanDir) {
         try {
-            if (doesFileExist(baseDir)) {
+            if (doesFileExist(scanDir)) {
                 // CodeNarc throws System.exit() if the basedir cannot be found, so we must make sure it's there
-                CodeNarc.main("-rulesetfiles=file:$rulesFileRelativePath", "-basedir=$baseDir", "-report=json:$jsonCodeReportFileName")
+                CodeNarc.main("-rulesetfiles=file:$rulesFileRelativePath", "-basedir=$scanDir", "-report=json:$jsonCodeReportFileName")
             } else {
-                println("Basedir [$baseDir] doesn't exist in the workspace")
+                println("Basedir [$scanDir] doesn't exist in the workspace")
             }
         } catch (any) {
-            println("There was a problem with generating report for [$baseDir] directory. Skipping analysis...")
+            println("There was a problem with generating report for [$scanDir] directory. Skipping analysis...")
             any.printStackTrace()
         }
     }
 
     // TODO - tests
-    private static List<CodeNarcIssue> parseReport(String fileName) {
-        Map codeNarcReport = readReport(fileName)
-        println("Report [$fileName] parsed")
+    private static List<CodeNarcIssue> parseReport() {
+        Map codeNarcReport = readReport()
+        println("Report [$jsonCodeReportFileName] parsed")
 
         if (!codeNarcReport || !isAnyViolationFound(codeNarcReport)) {
             println("No violations found")
@@ -72,12 +67,12 @@ class CodeNarcUtils {
         }
     }
 
-    private static Map readReport(String fileName) {
+    private static Map readReport() {
         Map report = [:]
-        if (doesFileExist(fileName)) {
-            report = new JsonSlurper().parse(new File(fileName))
+        if (doesFileExist(jsonCodeReportFileName)) {
+            report = new JsonSlurper().parse(new File(jsonCodeReportFileName))
         } else {
-            println("Report [$fileName] was not generated. Skipping...")
+            println("Report [$jsonCodeReportFileName] was not generated. Skipping...")
         }
 
         return report

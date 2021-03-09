@@ -11,13 +11,13 @@ import org.apache.commons.cli.ParseException
 
 class CommandLineUtils {
     final static String probeAnalysisArg = "p"
-    final static String probeScanDirArg = "dir"
+    final static String scanDirArg = "dir"
     final static String narcAnalysisArg = "n"
     final static String narcRulesFileArg = "rulefile"
 
     private static Options getParserOptions() {
         Option probeAnalysis = new Option(probeAnalysisArg, false, "Execute pfxprobe analysis")
-        Option scanDir = new Option(probeScanDirArg, true, "Directories to be scanned by pfxprobe rules")
+        Option scanDir = new Option(scanDirArg, true, "Directories to be scanned by pfxprobe rules")
         Option narcAnalysis = new Option(narcAnalysisArg, false, "Execute CodeNarc analysis")
         Option narcRulesFile = new Option(narcRulesFileArg, true, "(Optional) Relative path to ruleset file. If not passed, default Accelerator ruleset will be used")
 

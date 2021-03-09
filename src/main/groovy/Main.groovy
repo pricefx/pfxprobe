@@ -14,11 +14,11 @@ class Main {
         CommandLine cmd = CommandLineUtils.parseInputArgs(args)
 
         ArrayList<PfxProbeIssue> pfxProbeIssues = cmd.hasOption(CommandLineUtils.probeAnalysisArg) ?
-                PfxProbeUtils.getPfxProbeIssues(cmd.getOptionValues(CommandLineUtils.probeScanDirArg)) :
+                PfxProbeUtils.getPfxProbeIssues(cmd.getOptionValues(CommandLineUtils.scanDirArg)) :
                 []
 
         ArrayList<CodeNarcIssue> codeNarcIssues = cmd.hasOption(CommandLineUtils.narcAnalysisArg) ?
-                CodeNarcUtils.getCodeNarcIssues(cmd.getOptionValue(CommandLineUtils.narcRulesFileArg)) :
+                CodeNarcUtils.getCodeNarcIssues(cmd.getOptionValues(CommandLineUtils.scanDirArg), cmd.getOptionValue(CommandLineUtils.narcRulesFileArg)) :
                 []
 
         ArrayList<CodeClimateIssue> allIssues = (codeNarcIssues + pfxProbeIssues).sort()
