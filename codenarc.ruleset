@@ -118,11 +118,13 @@ ruleset {
     InvertedIfElse
     LongLiteralWithLowerCaseL
     MethodParameterTypeRequired
-    MethodReturnTypeRequired
+    MethodReturnTypeRequired {
+        ignoreMethodNames = "* *" // Skip checking unit test method names. Most of test cases have spaces in names so it should be good enough.
+    }
     // NoDef // On one hand side, it is useful, but on the other, we have a lot of defs where we can't use the PfX type or else tests will fail
     NoDouble
     NoFloat
-    NoJavaUtilDate
+    // NoJavaUtilDate // We can't use the suggested java.time.* package either way
     // NoTabCharacter
     ParameterReassignment
     PublicMethodsBeforeNonPublicMethods
@@ -163,7 +165,7 @@ ruleset {
     // rulesets/dry.xml
     DuplicateListLiteral
     DuplicateMapLiteral
-    DuplicateNumberLiteral
+    // DuplicateNumberLiteral // It makes it weird to do some simple calculations
     // DuplicateStringLiteral // We reuse these values in configurations. It's too nitpicky
 
     // rulesets/enhanced.xml
@@ -292,7 +294,7 @@ ruleset {
     DuplicateImport
     // ImportFromSamePackage
     // ImportFromSunPackages
-    MisorderedStaticImports
+    // MisorderedStaticImports // Conflicts with IntelliJ import formatting default settings
     NoWildcardImports
     UnnecessaryGroovyImport
     UnusedImport
