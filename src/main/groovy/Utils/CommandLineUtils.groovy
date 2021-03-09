@@ -20,7 +20,7 @@ class CommandLineUtils {
     final static String narcAnalysisDesc = "Execute CodeNarc analysis"
 
     final static String narcRulesFileArg = "rulefile"
-    final static String narcRulesFileDesc = "Path to ruleset file relative to project directory. To use default Accelerator ruleset, use `/codenarc.ruleset`"
+    final static String narcRulesFileDesc = "Path to ruleset file relative to project directory. By default Accelerators team ruleset is used. Custom configurations can be created using codenarc.ruleset file as a template"
 
 
     private static Options getParserOptions() {

@@ -5,7 +5,7 @@ import groovy.json.JsonSlurper
 import org.codenarc.CodeNarc
 
 class CodeNarcUtils {
-    final static String defaultRulesFileRelativePath = "codenarc.ruleset"
+    final static String defaultRulesFileAbsolutePath = "/codenarc.ruleset"
     final static String jsonCodeReportFileName = 'CodeNarcCodeJsonReport.json'
 
     static List<CodeNarcIssue> getCodeNarcIssues(String[] scanDirs, String userRulesFileRelativePath) {
@@ -24,19 +24,20 @@ class CodeNarcUtils {
 
     /**
      * We assume that image runs in repository with PFX Studio file structure
-     * @param userRulesFileRelativePath
+     * @param scanDir
+     * @param userRulesFilePath String containing path to ruleset file. Relative to repository root directory or absolute.
      */
-    private static void runAnalysis(String scanDir, String userRulesFileRelativePath) {
-        String rulesFileRelativePath = userRulesFileRelativePath ?: defaultRulesFileRelativePath
+    private static void runAnalysis(String scanDir, String userRulesFilePath) {
+        String rulesFilePath = userRulesFilePath ?: defaultRulesFileAbsolutePath
 
-        safeExecuteAnalysisForDir(rulesFileRelativePath, scanDir)
+        safeExecuteAnalysisForDir(rulesFilePath, scanDir)
     }
 
-    private static void safeExecuteAnalysisForDir(String rulesFileRelativePath, String scanDir) {
+    private static void safeExecuteAnalysisForDir(String rulesFilePath, String scanDir) {
         try {
             if (doesFileExist(scanDir)) {
                 // CodeNarc throws System.exit() if the basedir cannot be found, so we must make sure it's there
-                CodeNarc.main("-rulesetfiles=file:$rulesFileRelativePath", "-basedir=$scanDir", "-report=json:$jsonCodeReportFileName")
+                CodeNarc.main("-rulesetfiles=file:$rulesFilePath", "-basedir=$scanDir", "-report=json:$jsonCodeReportFileName")
             } else {
                 println("Basedir [$scanDir] doesn't exist in the workspace")
             }

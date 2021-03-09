@@ -30,7 +30,7 @@ pfxprobe:
     - develop
     - merge_requests
   script:
-    - pfxprobe -dir . -ruleset /codenarc.ruleset
+    - pfxprobe -dir .
   artifacts:
     when: always
     reports:
@@ -67,9 +67,10 @@ are executed.
                    only on first one
  -n                Execute CodeNarc analysis
  -p                Execute pfxprobe analysis
- -rulefile <arg>   Path to ruleset file relative to project directory. To
-                   use default Accelerator ruleset, use
-                   `/codenarc.ruleset`
+ -rulefile <arg>   Path to ruleset file relative to project directory. By
+                   default Accelerators team ruleset is used. Custom
+                   configurations can be created using codenarc.ruleset
+                   file as a template
 ```
 
 ### CLI Usage
@@ -82,9 +83,10 @@ are executed.
                    only on first one
  -n                Execute CodeNarc analysis
  -p                Execute pfxprobe analysis
- -rulefile <arg>   Path to ruleset file relative to project directory. To
-                   use default Accelerator ruleset, use
-                   `/codenarc.ruleset`
+ -rulefile <arg>   Path to ruleset file relative to project directory. By
+                   default Accelerators team ruleset is used. Custom
+                   configurations can be created using codenarc.ruleset
+                   file as a template
 ```
 
 ### Attributions

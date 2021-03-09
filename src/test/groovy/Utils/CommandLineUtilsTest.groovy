@@ -13,9 +13,10 @@ are executed.${System.lineSeparator()}\
                    only on first one${System.lineSeparator()}\
  -n                Execute CodeNarc analysis${System.lineSeparator()}\
  -p                Execute pfxprobe analysis${System.lineSeparator()}\
- -rulefile <arg>   Path to ruleset file relative to project directory. To${System.lineSeparator()}\
-                   use default Accelerator ruleset, use${System.lineSeparator()}\
-                   `/codenarc.ruleset`${System.lineSeparator()}\
+ -rulefile <arg>   Path to ruleset file relative to project directory. By${System.lineSeparator()}\
+                   default Accelerators team ruleset is used. Custom${System.lineSeparator()}\
+                   configurations can be created using codenarc.ruleset${System.lineSeparator()}\
+                   file as a template${System.lineSeparator()}\
 """
 
     def "Command Line Help Message Hasn't Changed"() {
