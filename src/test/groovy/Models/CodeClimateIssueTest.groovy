@@ -38,13 +38,12 @@ class CodeClimateIssueTest extends Specification {
         PfxProbeIssue criticalProbeIssue = new PfxProbeIssue(criticalTestPattern, testFilePath, testFileLine, testFileLine, 0, 0)
 
         then:
-        (majorNarcIssue <=> criticalProbeIssue) < 0
-        (criticalProbeIssue <=> majorNarcIssue) > 0
-        (minorNarcIssue <=> majorNarcIssue) < 0
-        (majorNarcIssue <=> minorNarcIssue) > 0
-        (minorNarcIssue <=> criticalProbeIssue) < 0
-        (criticalProbeIssue <=> minorNarcIssue) > 0
+        (majorNarcIssue <=> criticalProbeIssue) > 0
+        (criticalProbeIssue <=> majorNarcIssue) < 0
+        (minorNarcIssue <=> majorNarcIssue) > 0
+        (majorNarcIssue <=> minorNarcIssue) < 0
+        (minorNarcIssue <=> criticalProbeIssue) > 0
+        (criticalProbeIssue <=> minorNarcIssue) < 0
     }
-
 
 }

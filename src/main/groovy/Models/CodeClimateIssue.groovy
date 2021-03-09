@@ -41,6 +41,6 @@ abstract class CodeClimateIssue implements Comparable {
         }
         String comparedIndexedDescription = "$comparedSeverityIndex${compared.getIssueDescription()}"
 
-        return thisIndexedDescription <=> comparedIndexedDescription
+        return comparedIndexedDescription <=> thisIndexedDescription
     }
 }
