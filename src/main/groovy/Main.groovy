@@ -9,15 +9,14 @@ import org.apache.commons.cli.CommandLine
 
 class Main {
     static void main(String... args) {
-        // TODO - update readme
         println("pfxprobe Started...")
         CommandLine cmd = CommandLineUtils.parseInputArgs(args)
 
-        ArrayList<PfxProbeIssue> pfxProbeIssues = cmd.hasOption(CommandLineUtils.probeAnalysisArg) ?
+        ArrayList<PfxProbeIssue> pfxProbeIssues = CommandLineUtils.shouldRunProbeAnalysis(cmd) ?
                 PfxProbeUtils.getPfxProbeIssues(cmd.getOptionValues(CommandLineUtils.scanDirArg)) :
                 []
 
-        ArrayList<CodeNarcIssue> codeNarcIssues = cmd.hasOption(CommandLineUtils.narcAnalysisArg) ?
+        ArrayList<CodeNarcIssue> codeNarcIssues = CommandLineUtils.shouldRunNarcAnalysis(cmd) ?
                 CodeNarcUtils.getCodeNarcIssues(cmd.getOptionValues(CommandLineUtils.scanDirArg), cmd.getOptionValue(CommandLineUtils.narcRulesFileArg)) :
                 []
 

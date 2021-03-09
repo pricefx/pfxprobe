@@ -11,15 +11,24 @@ import org.apache.commons.cli.ParseException
 
 class CommandLineUtils {
     final static String probeAnalysisArg = "p"
+    final static String probeAnalysisDesc = "Execute pfxprobe analysis"
+
     final static String scanDirArg = "dir"
+    final static String scanDirDesc = "Directories to be scanned. CodeNarc analysis will run only on first one"
+
     final static String narcAnalysisArg = "n"
+    final static String narcAnalysisDesc = "Execute CodeNarc analysis"
+
     final static String narcRulesFileArg = "rulefile"
+    final static String narcRulesFileDesc = "Path to ruleset file relative to project directory. To use default Accelerator ruleset, use `/codenarc.ruleset`"
+
 
     private static Options getParserOptions() {
-        Option probeAnalysis = new Option(probeAnalysisArg, false, "Execute pfxprobe analysis")
-        Option scanDir = new Option(scanDirArg, true, "Directories to be scanned by pfxprobe rules")
-        Option narcAnalysis = new Option(narcAnalysisArg, false, "Execute CodeNarc analysis")
-        Option narcRulesFile = new Option(narcRulesFileArg, true, "(Optional) Relative path to ruleset file. If not passed, default Accelerator ruleset will be used")
+        Option probeAnalysis = new Option(probeAnalysisArg, false, probeAnalysisDesc)
+        Option scanDir = new Option(scanDirArg, true, scanDirDesc)
+        scanDir.setRequired(true)
+        Option narcAnalysis = new Option(narcAnalysisArg, false, narcAnalysisDesc)
+        Option narcRulesFile = new Option(narcRulesFileArg, true, narcRulesFileDesc)
 
         return new Options().addOption(probeAnalysis)
                 .addOption(scanDir)
@@ -29,7 +38,7 @@ class CommandLineUtils {
 
     static void printInputArgsHelp() {
         HelpFormatter helpFormatter = new HelpFormatter()
-        String header = ""
+        String header = "By default, when -$probeAnalysisArg or -$narcAnalysisArg parameters are not provided, both analysis types are executed. "
         String footer = ""
         helpFormatter.printHelp("pfxprobe", header, getParserOptions(), footer, true)
     }
@@ -43,5 +52,23 @@ class CommandLineUtils {
             printInputArgsHelp()
             throw e
         }
+    }
+
+    static boolean shouldRunProbeAnalysis(CommandLine cmd) {
+        boolean hasProbeOption = cmd.hasOption(probeAnalysisArg)
+        boolean hasNarcOption = cmd.hasOption(narcAnalysisArg)
+
+        boolean isRunAsDefault = !hasProbeOption && !hasNarcOption
+
+        return isRunAsDefault || hasProbeOption
+    }
+
+    static boolean shouldRunNarcAnalysis(CommandLine cmd) {
+        boolean hasProbeOption = cmd.hasOption(probeAnalysisArg)
+        boolean hasNarcOption = cmd.hasOption(narcAnalysisArg)
+
+        boolean isRunAsDefault = !hasProbeOption && !hasNarcOption
+
+        return isRunAsDefault || hasNarcOption
     }
 }

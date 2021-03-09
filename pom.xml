@@ -217,6 +217,11 @@
             <artifactId>spock-junit4</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+            <version>3.3.0</version>
+        </dependency>
     </dependencies>
 
     <repositories>

@@ -1,4 +1,5 @@
-import Utils.FileUtils
+package Utils
+
 import spock.lang.Specification
 
 class FileUtilsTest extends Specification {

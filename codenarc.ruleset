@@ -209,10 +209,7 @@ ruleset {
     ConsecutiveBlankLines
     FileEndsWithoutNewline
     Indentation
-    // Default 120 is a little conservative, so I added a buffor
-    LineLength {
-        length = 150
-    }
+    // LineLength
     MissingBlankLineAfterImports
     MissingBlankLineAfterPackage
     SpaceAfterCatch
@@ -355,7 +352,7 @@ ruleset {
     }
     // InterfaceName
     // InterfaceNameSameAsSuperInterface
-    MethodName
+    // MethodName
     // ObjectOverrideMisspelledMethodName
     // PackageName
     // PackageNameMatchesFilePath

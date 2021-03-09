@@ -5,13 +5,17 @@ import groovy.json.JsonSlurper
 import org.codenarc.CodeNarc
 
 class CodeNarcUtils {
-
     final static String defaultRulesFileRelativePath = "codenarc.ruleset"
     final static String jsonCodeReportFileName = 'CodeNarcCodeJsonReport.json'
 
     static List<CodeNarcIssue> getCodeNarcIssues(String[] scanDirs, String userRulesFileRelativePath) {
         println("Starting codeNarc analysis")
-        runAnalysis(scanDirs?.getAt(0), userRulesFileRelativePath) // TODO - we can scan only one directory with codeNarc
+
+        if (scanDirs.size() > 1) {
+            println("CodeNarc analysis will be executed only for the first provided input source directory")
+        }
+
+        runAnalysis(scanDirs?.getAt(0), userRulesFileRelativePath)
 
         ArrayList<CodeNarcIssue> codeNarcCodeIssues = parseReport() ?: []
 
@@ -42,7 +46,6 @@ class CodeNarcUtils {
         }
     }
 
-    // TODO - tests
     private static List<CodeNarcIssue> parseReport() {
         Map codeNarcReport = readReport()
         println("Report [$jsonCodeReportFileName] parsed")
@@ -52,19 +55,7 @@ class CodeNarcUtils {
             return []
         }
 
-        // TODO - Try to refactor in a simpler way with .collect(). Write tests first.
-        return codeNarcReport.packages.inject([]) { List results, Map pathReport ->
-            pathReport.files?.each { Map fileReport ->
-                String filePath = "${pathReport.path}/${fileReport.name}"
-                println("Translating report for ${filePath}")
-
-                fileReport.violations?.each { Map violation ->
-                    results << new CodeNarcIssue(violation.ruleName, filePath, violation.priority, violation.lineNumber ?: 0, violation.message)
-                }
-            }
-
-            return results
-        }
+        return translateRawReport(codeNarcReport)
     }
 
     private static Map readReport() {
@@ -79,12 +70,27 @@ class CodeNarcUtils {
     }
 
     private static boolean isAnyViolationFound(Map codeNarcReport) {
-        int filesWithViolations = codeNarcReport?.summary?.filesWithViolations
+        int filesWithViolations = codeNarcReport?.summary?.filesWithViolations ?: 0
 
         return filesWithViolations > 0
     }
 
     static boolean doesFileExist(String filePath) {
         return new File(filePath).exists()
+    }
+
+    private static List<CodeNarcIssue> translateRawReport(Map codeNarcReport) {
+        return codeNarcReport.packages.inject([]) { List results, Map pathReport ->
+            pathReport.files?.each { Map fileReport ->
+                String filePath = "${pathReport.path}/${fileReport.name}"
+                println("Translating report for ${filePath}")
+
+                fileReport.violations?.each { Map violation ->
+                    results << new CodeNarcIssue(violation.ruleName, filePath, violation.priority, violation.lineNumber ?: 0, violation.message)
+                }
+            }
+
+            return results
+        }
     }
 }
