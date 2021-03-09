@@ -54,7 +54,7 @@ docker login https://cregistry.pricefx.eu --username EMAILADDRESS --password ACC
 Step 2. Run the following command from your source code parent folder (with Bash or PowerShell - NOT CMD)
 
 ```
-docker run --rm -it --name pfxprobe -v ${PWD}:/code cregistry.pricefx.eu/tools/pfxprobe bash pfxprobe -dir code -ruleset /codenarc.ruleset
+docker run --rm -it --name pfxprobe -v ${PWD}:/code cregistry.pricefx.eu/tools/pfxprobe bash pfxprobe -dir code
 ```
 
 ### JAR Usage
