@@ -64,7 +64,7 @@ class CodeNarcUtils {
                 println("Translating report for ${filePath}")
 
                 fileReport.violations?.each { Map violation ->
-                    results << new CodeNarcIssue(violation.ruleName, filePath, violation.priority, violation.lineNumber, violation.message)
+                    results << new CodeNarcIssue(violation.ruleName, filePath, violation.priority, violation.lineNumber ?: 0, violation.message)
                 }
             }
 
