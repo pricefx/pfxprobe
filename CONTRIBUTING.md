@@ -9,7 +9,7 @@ If you wish to contribute a new issue pattern (Thank You!!) all you need to do i
 and add a test case for it to ensure it's working as expected.
 
 - [Add to the Pattern Dictionary Here](https://gitlab.pricefx.eu/tools/pfxprobe/-/blob/master/src/main/groovy/PatternDictionary.groovy)
-- [Add to the Pattern Test Cases Here](https://gitlab.pricefx.eu/tools/pfxprobe/-/blob/master/src/test/groovy/PatternDictionaryTest.groovy)
+- [Add to the Pattern Test Cases Here](https://gitlab.pricefx.eu/tools/pfxprobe/-/blob/master/src/test/groovy/Utils.PatternDictionaryTest.groovy)
 
 ## Merge Requests
 

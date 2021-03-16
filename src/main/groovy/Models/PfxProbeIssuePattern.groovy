@@ -4,8 +4,8 @@ import Utils.FileUtils
 
 import java.util.regex.Matcher
 
-class PfxIssuePattern {
-    PfxIssuePattern(
+class PfxProbeIssuePattern {
+    PfxProbeIssuePattern(
             String name,
             String description,
             String pattern,
@@ -19,14 +19,14 @@ class PfxIssuePattern {
         Categories = categories
     }
 
-    public String Name
-    public String Description
-    public String Pattern
-    public String Severity
-    public List<String> Categories
+    String Name
+    String Description
+    String Pattern
+    String Severity
+    List<String> Categories
 
-    List<PfxCodeIssue> findOccurrencesInFile(File file) {
-        List<PfxCodeIssue> allIssues = []
+    List<PfxProbeIssue> findOccurrencesInFile(File file) {
+        List<PfxProbeIssue> allIssues = []
         Matcher matcher = file.text =~ Pattern
         matcher.results().each { match ->
             Integer lineBegin = FileUtils.getFileLines(file).find {
@@ -37,7 +37,7 @@ class PfxIssuePattern {
             }?.key
 
             if (lineBegin && lineEnd) {
-                allIssues << new PfxCodeIssue(this, file.path, lineBegin, lineEnd, match.start(), match.end())
+                allIssues << new PfxProbeIssue(this, file.path, lineBegin, lineEnd, match.start(), match.end())
             }
         }
         return allIssues

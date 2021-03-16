@@ -1,54 +1,34 @@
-import Models.PfxCodeIssue
+import Models.CodeClimateIssue
+import Models.CodeNarcIssue
+import Models.PfxProbeIssue
+import Utils.CodeNarcUtils
 import Utils.CommandLineUtils
-import Utils.FileUtils
+import Utils.PfxProbeUtils
 import Utils.ReportUtils
 import org.apache.commons.cli.CommandLine
-import java.util.concurrent.CopyOnWriteArrayList
 
 class Main {
-    private static String failureSeverity = "blocker"
-    private static String[] severityImportance = [
-            "info",
-            "minor",
-            "major",
-            "critical",
-            "blocker"
-    ]
-
     static void main(String... args) {
         println("pfxprobe Started...")
         CommandLine cmd = CommandLineUtils.parseInputArgs(args)
 
-        CopyOnWriteArrayList<PfxCodeIssue> allIssues = []
-        cmd.getOptionValues(CommandLineUtils.scanDirArg).toList().parallelStream().forEach { String dirPath ->
+        ArrayList<PfxProbeIssue> pfxProbeIssues = CommandLineUtils.shouldRunProbeAnalysis(cmd) ?
+                PfxProbeUtils.getPfxProbeIssues(cmd.getOptionValues(CommandLineUtils.scanDirArg)) :
+                []
 
-            def issuePatterns = PatternDictionary.getPatternDictionary()
-            def groovyFiles = FileUtils.getGroovyFilesInPath(dirPath)
+        ArrayList<CodeNarcIssue> codeNarcIssues = CommandLineUtils.shouldRunNarcAnalysis(cmd) ?
+                CodeNarcUtils.getCodeNarcIssues(cmd.getOptionValues(CommandLineUtils.scanDirArg), cmd.getOptionValue(CommandLineUtils.narcRulesFileArg)) :
+                []
 
-            println("pfxprobe Scanning Directory $dirPath")
-            groovyFiles.parallelStream().forEach { file ->
-                issuePatterns.parallelStream().forEach { issuePattern ->
-                    allIssues.addAll(issuePattern.findOccurrencesInFile(file))
-                }
-            }
-        }
-
-        //sort found issues by highest severity
-        allIssues.sort { it.getDescription() }.sort { a, b ->
-            severityImportance.findIndexOf {
-                it == b.IssuePattern.Description
-            } <=> severityImportance.findIndexOf {
-                it == a.IssuePattern.Severity
-            }
-        }
+        ArrayList<CodeClimateIssue> allIssues = (codeNarcIssues + pfxProbeIssues).sort()
 
         ReportUtils.printIssueDiscoveriesToConsole(allIssues)
-
         ReportUtils.writeCodeClimateReport(allIssues)
 
         // Check if failure severities are defined and fail job if matching issues are found
-        if (allIssues.any { issue -> severityImportance.findIndexOf { it == issue.IssuePattern.Severity } >= severityImportance.findIndexOf { it == failureSeverity } })
-            throw new Exception("Found issue(s) >= $failureSeverity severity")
+        if (allIssues.any { issue -> issue.isFailingSeverity() }) {
+            throw new Exception("Found issue(s) >= ${CodeClimateIssue.failureSeverity} severity")
+        }
 
         println("pfxprobe Finished...")
     }

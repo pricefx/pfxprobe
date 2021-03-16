@@ -3,8 +3,12 @@
 commonly known malpractices recommended improvements. It is based loosely on [CodeClimate](https://github.com/codeclimate/codeclimate).
 
 This tool will search for issues in the provided directories and generate a *codeclimate.json* report which can then
-be used in other tools, such as Gitlab CI for tracking Resolved / Newly Introduced issues between commits.  
+be used in other tools, such as Gitlab CI for tracking Resolved / Newly Introduced issues between commits.
 
+There are two types of analysis available:
+1. **Probe** - Uses custom regex based rules created to handle PriceFX specific rules
+2. **Narc** - Uses generic Groovy static code analysis engine [CodeNarc](https://codenarc.org/). Default ruleset is based on the Accelerators team and can be modified with job configuration if necessary
+     
 ## Distribution and Usage
 
 This project is distributed as:
@@ -56,15 +60,33 @@ docker run --rm -it --name pfxprobe -v ${PWD}:/code cregistry.pricefx.eu/tools/p
 ### JAR Usage
 
 ```
-usage: java -jar pfxprobe.jar -dir <arg>
- -dir <arg>   Directories to be scanned
+usage: java -jar pfxprobe.jar -dir <arg> [-n] [-p] [-rulefile <arg>]
+By default, when -p or -n parameters are not provided, both analysis types
+are executed.
+ -dir <arg>        Directories to be scanned. CodeNarc analysis will run
+                   only on first one
+ -n                Execute CodeNarc analysis
+ -p                Execute pfxprobe analysis
+ -rulefile <arg>   Path to ruleset file relative to project directory. By
+                   default Accelerators team ruleset is used. Custom
+                   configurations can be created using codenarc.ruleset
+                   file as a template
 ```
 
 ### CLI Usage
 
 ```
-usage: pfxprobe -dir <arg>
- -dir <arg>   Directories to be scanned
+usage: pfxprobe -dir <arg> [-n] [-p] [-rulefile <arg>]
+By default, when -p or -n parameters are not provided, both analysis types
+are executed.
+ -dir <arg>        Directories to be scanned. CodeNarc analysis will run
+                   only on first one
+ -n                Execute CodeNarc analysis
+ -p                Execute pfxprobe analysis
+ -rulefile <arg>   Path to ruleset file relative to project directory. By
+                   default Accelerators team ruleset is used. Custom
+                   configurations can be created using codenarc.ruleset
+                   file as a template
 ```
 
 ### Attributions

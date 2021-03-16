@@ -29,7 +29,6 @@
 
     <build>
         <plugins>
-
             <!-- Compilation of Groovy Code -->
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
@@ -202,6 +201,11 @@
             <artifactId>commons-cli</artifactId>
             <version>1.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.codenarc</groupId>
+            <artifactId>CodeNarc</artifactId>
+            <version>2.0.0</version>
+        </dependency>
         <!-- Test -->
         <dependency>
             <groupId>org.spockframework</groupId>
@@ -212,6 +216,11 @@
             <groupId>org.spockframework</groupId>
             <artifactId>spock-junit4</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
+            <version>3.3.0</version>
         </dependency>
     </dependencies>
 

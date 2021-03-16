@@ -1,5 +1,8 @@
 FROM openjdk:11-slim-buster
 
+# copy default CodeNarc ruleset
+ADD codenarc.ruleset /
+
 # copy built distribution files to image
 ADD target/distribution /var/pfxprobe
 
