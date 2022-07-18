@@ -3,78 +3,75 @@ ruleset {
     description '''
         A Sample Groovy RuleSet containing all CodeNarc Rules, grouped by category.
         You can use this as a template for your own custom RuleSet.
-        Just delete the rules that you don't want to include.
-
-        Default active rules is a set that is used in Accelerator projects. Feel free to create your own sets.
         '''
 
     // rulesets/basic.xml
-    AssertWithinFinallyBlock
-    AssignmentInConditional
-    BigDecimalInstantiation
-    BitwiseOperatorInConditional
-    BooleanGetBoolean
-    BrokenNullCheck
-    BrokenOddnessCheck
+    // AssertWithinFinallyBlock
+    // AssignmentInConditional
+    // BigDecimalInstantiation
+    // BitwiseOperatorInConditional
+    // BooleanGetBoolean
+    // BrokenNullCheck
+    // BrokenOddnessCheck
     // ClassForName
-    ComparisonOfTwoConstants
-    ComparisonWithSelf
-    ConstantAssertExpression
-    ConstantIfExpression
-    ConstantTernaryExpression
-    DeadCode
-    DoubleNegative
-    DuplicateCaseStatement
-    DuplicateMapKey
-    DuplicateSetValue
-    EmptyCatchBlock
-    EmptyClass
-    EmptyElseBlock
-    EmptyFinallyBlock
-    EmptyForStatement
-    EmptyIfStatement
-    EmptyInstanceInitializer
-    EmptyMethod
-    EmptyStaticInitializer
-    EmptySwitchStatement
-    EmptySynchronizedStatement
-    EmptyTryBlock
-    EmptyWhileStatement
+    // ComparisonOfTwoConstants
+    // ComparisonWithSelf
+    // ConstantAssertExpression
+    // ConstantIfExpression
+    // ConstantTernaryExpression
+    // DeadCode
+    // DoubleNegative
+    // DuplicateCaseStatement
+    // DuplicateMapKey
+    // DuplicateSetValue
+    // EmptyCatchBlock
+    // EmptyClass
+    // EmptyElseBlock
+    // EmptyFinallyBlock
+    // EmptyForStatement
+    // EmptyIfStatement
+    // EmptyInstanceInitializer
+    // EmptyMethod
+    // EmptyStaticInitializer
+    // EmptySwitchStatement
+    // EmptySynchronizedStatement
+    // EmptyTryBlock
+    // EmptyWhileStatement
     // EqualsAndHashCode
     // EqualsOverloaded
     // ExplicitGarbageCollection
-    ForLoopShouldBeWhileLoop
-    HardCodedWindowsFileSeparator
-    HardCodedWindowsRootDirectory
-    IntegerGetInteger
-    MultipleUnaryOperators
-    RandomDoubleCoercedToZero
-    RemoveAllOnSelf
-    ReturnFromFinallyBlock
-    ThrowExceptionFromFinallyBlock
+    // ForLoopShouldBeWhileLoop
+    // HardCodedWindowsFileSeparator
+    // HardCodedWindowsRootDirectory
+    // IntegerGetInteger
+    // MultipleUnaryOperators
+    // RandomDoubleCoercedToZero
+    // RemoveAllOnSelf
+    // ReturnFromFinallyBlock
+    // ThrowExceptionFromFinallyBlock
 
     // rulesets/braces.xml
-    ElseBlockBraces
-    ForStatementBraces
-    IfStatementBraces
-    WhileStatementBraces
+    // ElseBlockBraces
+    // ForStatementBraces
+    // IfStatementBraces
+    // WhileStatementBraces
 
     // rulesets/comments.xml
     // ClassJavadoc
-    JavadocConsecutiveEmptyLines
-    JavadocEmptyAuthorTag
-    JavadocEmptyExceptionTag
-    JavadocEmptyFirstLine
-    JavadocEmptyLastLine
-    JavadocEmptyParamTag
-    JavadocEmptyReturnTag
-    JavadocEmptySeeTag
-    JavadocEmptySinceTag
-    JavadocEmptyThrowsTag
-    JavadocEmptyVersionTag
-    JavadocMissingExceptionDescription
-    JavadocMissingParamDescription
-    JavadocMissingThrowsDescription
+    // JavadocConsecutiveEmptyLines
+    // JavadocEmptyAuthorTag
+    // JavadocEmptyExceptionTag
+    // JavadocEmptyFirstLine
+    // JavadocEmptyLastLine
+    // JavadocEmptyParamTag
+    // JavadocEmptyReturnTag
+    // JavadocEmptySeeTag
+    // JavadocEmptySinceTag
+    // JavadocEmptyThrowsTag
+    // JavadocEmptyVersionTag
+    // JavadocMissingExceptionDescription
+    // JavadocMissingParamDescription
+    // JavadocMissingThrowsDescription
 
     // rulesets/concurrency.xml
     // BusyWait
@@ -106,31 +103,31 @@ ruleset {
 
     // rulesets/convention.xml
     // CompileStatic
-    ConfusingTernary
-    CouldBeElvis
-    CouldBeSwitchStatement
+    // ConfusingTernary
+    // CouldBeElvis
+    // CouldBeSwitchStatement
     // FieldTypeRequired // we can't use class fields - will cause some weird errors
-    HashtableIsObsolete
-    IfStatementCouldBeTernary
-    ImplicitClosureParameter
-    ImplicitReturnStatement
-    InvertedCondition
-    InvertedIfElse
-    LongLiteralWithLowerCaseL
-    MethodParameterTypeRequired
-    MethodReturnTypeRequired {
-        ignoreMethodNames = "* *" // Skip checking unit test method names. Most of test cases have spaces in names so it should be good enough.
-    }
+    // HashtableIsObsolete
+    // IfStatementCouldBeTernary
+    // ImplicitClosureParameter
+    // ImplicitReturnStatement
+    // InvertedCondition
+    // InvertedIfElse
+    // LongLiteralWithLowerCaseL
+    // MethodParameterTypeRequired
+//     MethodReturnTypeRequired {
+//         ignoreMethodNames = "* *" // Skip checking unit test method names. Most of test cases have spaces in names so it should be good enough.
+//     }
     // NoDef // On one hand side, it is useful, but on the other, we have a lot of defs where we can't use the PfX type or else tests will fail
-    NoDouble
-    NoFloat
+    // NoDouble
+    // NoFloat
     // NoJavaUtilDate // We can't use the suggested java.time.* package either way
     // NoTabCharacter
-    ParameterReassignment
-    PublicMethodsBeforeNonPublicMethods
+    // ParameterReassignment
+    // PublicMethodsBeforeNonPublicMethods
     // StaticFieldsBeforeInstanceFields
     // StaticMethodsBeforeInstanceMethods
-    TernaryCouldBeElvis
+    // TernaryCouldBeElvis
     // TrailingComma
     // VariableTypeRequired // Same as NoDef
     // VectorIsObsolete
@@ -139,7 +136,7 @@ ruleset {
     // AbstractClassWithPublicConstructor
     // AbstractClassWithoutAbstractMethod
     // AssignmentToStaticFieldFromInstanceMethod
-    BooleanMethodReturnsNull
+    // BooleanMethodReturnsNull
     // BuilderMethodWithSideEffects
     // CloneableWithoutClone
     // CloseWithoutCloseable
@@ -150,21 +147,21 @@ ruleset {
     // ImplementationAsType
     // Instanceof
     // LocaleSetDefault
-    NestedForLoop
+    // NestedForLoop
     // OptionalCollectionReturnType
     // OptionalField
     // OptionalMethodParameter
     // PrivateFieldCouldBeFinal
     // PublicInstanceField
-    ReturnsNullInsteadOfEmptyArray
-    ReturnsNullInsteadOfEmptyCollection
+    // ReturnsNullInsteadOfEmptyArray
+    // ReturnsNullInsteadOfEmptyCollection
     // SimpleDateFormatMissingLocale
     // StatelessSingleton
     // ToStringReturnsNull
 
     // rulesets/dry.xml
-    DuplicateListLiteral
-    DuplicateMapLiteral
+    // DuplicateListLiteral
+    // DuplicateMapLiteral
     // DuplicateNumberLiteral // It makes it weird to do some simple calculations
     // DuplicateStringLiteral // We reuse these values in configurations. It's too nitpicky
 
@@ -175,21 +172,21 @@ ruleset {
     // UnsafeImplementationAsMap
 
     // rulesets/exceptions.xml
-    CatchArrayIndexOutOfBoundsException
-    CatchError
-    CatchException
-    CatchIllegalMonitorStateException
-    CatchIndexOutOfBoundsException
-    CatchNullPointerException
-    CatchRuntimeException
-    CatchThrowable
-    ConfusingClassNamedException
-    ExceptionExtendsError
-    ExceptionExtendsThrowable
-    ExceptionNotThrown
-    MissingNewInThrowStatement
-    ReturnNullFromCatchBlock
-    SwallowThreadDeath
+    // CatchArrayIndexOutOfBoundsException
+    // CatchError
+    // CatchException
+    // CatchIllegalMonitorStateException
+    // CatchIndexOutOfBoundsException
+    // CatchNullPointerException
+    // CatchRuntimeException
+    // CatchThrowable
+    // ConfusingClassNamedException
+    // ExceptionExtendsError
+    // ExceptionExtendsThrowable
+    // ExceptionNotThrown
+    // MissingNewInThrowStatement
+    // ReturnNullFromCatchBlock
+    // SwallowThreadDeath
     // ThrowError // We can't have our own exception types, so we may need some generic types
     // ThrowException
     // ThrowNullPointerException
@@ -197,38 +194,38 @@ ruleset {
     // ThrowThrowable
 
     // rulesets/formatting.xml
-    BlankLineBeforePackage
-    BlockEndsWithBlankLine
-    BlockStartsWithBlankLine
-    BracesForClass
-    BracesForForLoop
-    BracesForIfElse
-    BracesForMethod
-    BracesForTryCatchFinally
-    ClassEndsWithBlankLine
-    ClassStartsWithBlankLine
-    ClosureStatementOnOpeningLineOfMultipleLineClosure
-    ConsecutiveBlankLines
-    FileEndsWithoutNewline
-    Indentation
+    // BlankLineBeforePackage
+    // BlockEndsWithBlankLine
+    // BlockStartsWithBlankLine
+    // BracesForClass
+    // BracesForForLoop
+    // BracesForIfElse
+    // BracesForMethod
+    // BracesForTryCatchFinally
+    // ClassEndsWithBlankLine
+    // ClassStartsWithBlankLine
+    // ClosureStatementOnOpeningLineOfMultipleLineClosure
+    // ConsecutiveBlankLines
+    // FileEndsWithoutNewline
+    // Indentation
     // LineLength
-    MissingBlankLineAfterImports
-    MissingBlankLineAfterPackage
-    SpaceAfterCatch
-    SpaceAfterClosingBrace
-    SpaceAfterComma
-    SpaceAfterFor
-    SpaceAfterIf
-    SpaceAfterOpeningBrace
-    SpaceAfterSemicolon
-    SpaceAfterSwitch
-    SpaceAfterWhile
-    SpaceAroundClosureArrow
+    // MissingBlankLineAfterImports
+    // MissingBlankLineAfterPackage
+    // SpaceAfterCatch
+    // SpaceAfterClosingBrace
+    // SpaceAfterComma
+    // SpaceAfterFor
+    // SpaceAfterIf
+    // SpaceAfterOpeningBrace
+    // SpaceAfterSemicolon
+    // SpaceAfterSwitch
+    // SpaceAfterWhile
+    // SpaceAroundClosureArrow
     // SpaceAroundMapEntryColon // Conflicts with IntelliJ autoformatting of maps
-    SpaceAroundOperator
-    SpaceBeforeClosingBrace
-    SpaceBeforeOpeningBrace
-    TrailingWhitespace
+    // SpaceAroundOperator
+    // SpaceBeforeClosingBrace
+    // SpaceBeforeOpeningBrace
+    // TrailingWhitespace
 
     // rulesets/generic.xml
     // IllegalClassMember
@@ -256,48 +253,48 @@ ruleset {
     // GrailsStatelessService
 
     // rulesets/groovyism.xml
-    AssignCollectionSort
-    AssignCollectionUnique
-    ClosureAsLastMethodParameter
-    CollectAllIsDeprecated
-    ConfusingMultipleReturns
-    ExplicitArrayListInstantiation
+    // AssignCollectionSort
+    // AssignCollectionUnique
+    // ClosureAsLastMethodParameter
+    // CollectAllIsDeprecated
+    // ConfusingMultipleReturns
+    // ExplicitArrayListInstantiation
     // ExplicitCallToAndMethod // It catches also Filter calls
-    ExplicitCallToCompareToMethod
-    ExplicitCallToDivMethod
+    // ExplicitCallToCompareToMethod
+    // ExplicitCallToDivMethod
     // ExplicitCallToEqualsMethod // It catches also Filter calls
     // ExplicitCallToGetAtMethod // We use a lot of it, because it is the safest for null-checking and works on both, lists and maps.
-    ExplicitCallToLeftShiftMethod
-    ExplicitCallToMinusMethod
-    ExplicitCallToModMethod
-    ExplicitCallToMultiplyMethod
+    // ExplicitCallToLeftShiftMethod
+    // ExplicitCallToMinusMethod
+    // ExplicitCallToModMethod
+    // ExplicitCallToMultiplyMethod
     // ExplicitCallToOrMethod // It catches also Filter calls
-    ExplicitCallToPlusMethod
-    ExplicitCallToPowerMethod
-    ExplicitCallToPutAtMethod
-    ExplicitCallToRightShiftMethod
-    ExplicitCallToXorMethod
-    ExplicitHashMapInstantiation
-    ExplicitHashSetInstantiation
-    ExplicitLinkedHashMapInstantiation
-    ExplicitLinkedListInstantiation
-    ExplicitStackInstantiation
-    ExplicitTreeSetInstantiation
-    GStringAsMapKey
-    GStringExpressionWithinString
+    // ExplicitCallToPlusMethod
+    // ExplicitCallToPowerMethod
+    // ExplicitCallToPutAtMethod
+    // ExplicitCallToRightShiftMethod
+    // ExplicitCallToXorMethod
+    // ExplicitHashMapInstantiation
+    // ExplicitHashSetInstantiation
+    // ExplicitLinkedHashMapInstantiation
+    // ExplicitLinkedListInstantiation
+    // ExplicitStackInstantiation
+    // ExplicitTreeSetInstantiation
+    // GStringAsMapKey
+    // GStringExpressionWithinString
     // GetterMethodCouldBeProperty // We don't use properties, so it returns weird results
     // GroovyLangImmutable
-    UseCollectMany
-    UseCollectNested
+    // UseCollectMany
+    // UseCollectNested
 
     // rulesets/imports.xml
-    DuplicateImport
+    // DuplicateImport
     // ImportFromSamePackage
     // ImportFromSunPackages
     // MisorderedStaticImports // Conflicts with IntelliJ import formatting default settings
-    NoWildcardImports
-    UnnecessaryGroovyImport
-    UnusedImport
+    // NoWildcardImports
+    // UnnecessaryGroovyImport
+    // UnusedImport
 
     // rulesets/jdbc.xml
     // DirectConnectionManagement
@@ -306,8 +303,8 @@ ruleset {
     // JdbcStatementReference
 
     // rulesets/junit.xml
-    ChainedTest
-    CoupledTestCase
+    // ChainedTest
+    // CoupledTestCase
     // We use Spock
     // JUnitAssertAlwaysFails
     // JUnitAssertAlwaysSucceeds
@@ -323,7 +320,7 @@ ruleset {
     // JUnitUnnecessarySetUp
     // JUnitUnnecessaryTearDown
     // JUnitUnnecessaryThrowsException
-    SpockIgnoreRestUsed
+    // SpockIgnoreRestUsed
     // UnnecessaryFail
     // UseAssertEqualsInsteadOfAssertTrue
     // UseAssertFalseInsteadOfNegation
@@ -337,34 +334,34 @@ ruleset {
     // LoggerWithWrongModifiers
     // LoggingSwallowsStacktrace
     // MultipleLoggers
-    PrintStackTrace
-    Println
-    SystemErrPrint
-    SystemOutPrint
+    // PrintStackTrace
+    // Println
+    // SystemErrPrint
+    // SystemOutPrint
 
     // rulesets/naming.xml
     // AbstractClassName
     // ClassName
     // ClassNameSameAsFilename
     // ClassNameSameAsSuperclass
-    ConfusingMethodName
+    // ConfusingMethodName
     // FactoryMethodName
-    FieldName {
-        regex = "([a-z_][a-zA-Z0-9]*)|([A-Z][A-Z0-9_]*)"
-    }
+//     FieldName {
+//         regex = "([a-z_][a-zA-Z0-9]*)|([A-Z][A-Z0-9_]*)"
+//     }
     // InterfaceName
     // InterfaceNameSameAsSuperInterface
     // MethodName
     // ObjectOverrideMisspelledMethodName
     // PackageName
     // PackageNameMatchesFilePath
-    ParameterName {
-        regex = "[a-z_][a-zA-Z0-9]*"
-    }
+//     ParameterName {
+//         regex = "[a-z_][a-zA-Z0-9]*"
+//     }
     // PropertyName
-    VariableName {
-        regex = "([a-z_][a-zA-Z0-9]*)|([A-Z][A-Z0-9_]*)"
-    }
+//     VariableName {
+//         regex = "([a-z_][a-zA-Z0-9]*)|([A-Z][A-Z0-9_]*)"
+//     }
 
     // rulesets/security.xml
     // Not sure we can do any of it
@@ -385,70 +382,70 @@ ruleset {
     // SerializableClassMustDefineSerialVersionUID
 
     // rulesets/size.xml
-    AbcMetric   // Requires the GMetrics jar
-    ClassSize
+//     AbcMetric   // Requires the GMetrics jar
+//     ClassSize
     // CrapMetric   // Requires the GMetrics jar and a Cobertura coverage file - we don't have coverage
-    CyclomaticComplexity   // Requires the GMetrics jar
-    MethodCount
-    MethodSize
-    NestedBlockDepth // Default is 5, but isn't it customary to stop at 3?
-    ParameterCount
+//     CyclomaticComplexity   // Requires the GMetrics jar
+//     MethodCount
+//     MethodSize
+//     NestedBlockDepth // Default is 5, but isn't it customary to stop at 3?
+//     ParameterCount
 
     // rulesets/unnecessary.xml
-    AddEmptyString
-    ConsecutiveLiteralAppends
-    ConsecutiveStringConcatenation
-    UnnecessaryBigDecimalInstantiation
-    UnnecessaryBigIntegerInstantiation
-    UnnecessaryBooleanExpression
-    UnnecessaryBooleanInstantiation
-    UnnecessaryCallForLastElement
-    UnnecessaryCallToSubstring
-    UnnecessaryCast
-    UnnecessaryCatchBlock
-    UnnecessaryCollectCall
-    UnnecessaryCollectionCall
+    // AddEmptyString
+    // ConsecutiveLiteralAppends
+    // ConsecutiveStringConcatenation
+    // UnnecessaryBigDecimalInstantiation
+    // UnnecessaryBigIntegerInstantiation
+    // UnnecessaryBooleanExpression
+    // UnnecessaryBooleanInstantiation
+    // UnnecessaryCallForLastElement
+    // UnnecessaryCallToSubstring
+    // UnnecessaryCast
+    // UnnecessaryCatchBlock
+    // UnnecessaryCollectCall
+    // UnnecessaryCollectionCall
     // UnnecessaryConstructor
     // UnnecessaryDefInFieldDeclaration
     // UnnecessaryDefInMethodDeclaration
     // UnnecessaryDefInVariableDeclaration
-    UnnecessaryDotClass
-    UnnecessaryDoubleInstantiation
-    UnnecessaryElseStatement
-    UnnecessaryFinalOnPrivateMethod
-    UnnecessaryFloatInstantiation
+    // UnnecessaryDotClass
+    // UnnecessaryDoubleInstantiation
+    // UnnecessaryElseStatement
+    // UnnecessaryFinalOnPrivateMethod
+    // UnnecessaryFloatInstantiation
     // UnnecessaryGString // It may be too nitpicky. It doesn't make so much difference to differentiate String from GString usually
     // UnnecessaryGetter // Seems faulty. Will also catch keys in maps when values are closures
-    UnnecessaryIfStatement
-    UnnecessaryInstanceOfCheck
-    UnnecessaryInstantiationToGetClass
-    UnnecessaryIntegerInstantiation
-    UnnecessaryLongInstantiation
-    UnnecessaryModOne
-    UnnecessaryNullCheck
-    UnnecessaryNullCheckBeforeInstanceOf
-    UnnecessaryObjectReferences
-    UnnecessaryOverridingMethod
-    UnnecessaryPackageReference
-    UnnecessaryParenthesesForMethodCallWithClosure
-    UnnecessaryPublicModifier
+    // UnnecessaryIfStatement
+    // UnnecessaryInstanceOfCheck
+    // UnnecessaryInstantiationToGetClass
+    // UnnecessaryIntegerInstantiation
+    // UnnecessaryLongInstantiation
+    // UnnecessaryModOne
+    // UnnecessaryNullCheck
+    // UnnecessaryNullCheckBeforeInstanceOf
+    // UnnecessaryObjectReferences
+    // UnnecessaryOverridingMethod
+    // UnnecessaryPackageReference
+    // UnnecessaryParenthesesForMethodCallWithClosure
+    // UnnecessaryPublicModifier
     // UnnecessaryReturnKeyword
-    UnnecessarySafeNavigationOperator
-    UnnecessarySelfAssignment
-    UnnecessarySemicolon
+    // UnnecessarySafeNavigationOperator
+    // UnnecessarySelfAssignment
+    // UnnecessarySemicolon
     // UnnecessarySetter // Seems faulty. Will also catch keys in maps when values are closures
-    UnnecessaryStringInstantiation
-    UnnecessarySubstring
-    UnnecessaryTernaryExpression
-    UnnecessaryToString
+    // UnnecessaryStringInstantiation
+    // UnnecessarySubstring
+    // UnnecessaryTernaryExpression
+    // UnnecessaryToString
     // UnnecessaryTransientModifier
 
     // rulesets/unused.xml
-    UnusedArray
-    UnusedMethodParameter
-    UnusedObject
-    UnusedPrivateField
-    UnusedPrivateMethod
-    UnusedPrivateMethodParameter
-    UnusedVariable
+    // UnusedArray
+    // UnusedMethodParameter
+    // UnusedObject
+    // UnusedPrivateField
+    // UnusedPrivateMethod
+    // UnusedPrivateMethodParameter
+    // UnusedVariable
 }
