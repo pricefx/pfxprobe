@@ -105,14 +105,14 @@ build-public-image:
   when: manual
   extends: .with-dind
   before_script:
+    - export DOCKER_REGISTRY_IMAGE=index.docker.io/pricefx/pfxprobe
     - export DOCKER_IMAGE_TAG=${CI_COMMIT_BRANCH#*release/}
   script:
     - docker info
     - echo -n $DOCKER_HUB_TOKEN | docker login -u pricefx --password-stdin docker.io
-    - docker pull index.docker.io/pricefx/pfxprobe:$DOCKER_IMAGE_TAG || true
-    - docker context create my-context
-    - docker buildx create --name multiarch-builder --use my-context
-    - docker buildx build --push --platform linux/arm64,linux/amd64 --tag index.docker.io/pricefx/pfxpackage:$DOCKER_IMAGE_TAG .
+    - docker pull $DOCKER_REGISTRY_IMAGE:latest || true
+    - docker build --tag $DOCKER_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
+    - docker push $DOCKER_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG
 
 .with-dind:
   variables:
