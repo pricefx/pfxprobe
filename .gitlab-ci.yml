@@ -79,7 +79,7 @@ publish-maven:
   only:
     - master
 
-publish-docker:
+build-private-image:
   stage: publish
   needs:
     - test
@@ -87,16 +87,32 @@ publish-docker:
   image: docker:19.03.8
   only:
     - master
-    - release/accelerator
   extends: .with-dind
   before_script:
-    - export RELEASE_VERSION=${CI_COMMIT_BRANCH#*release/}
+    - export DOCKER_IMAGE_TAG=${CI_COMMIT_BRANCH#*release/}
   script:
     - docker info
     - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE:latest || true
-    - docker build --tag $CI_REGISTRY_IMAGE:$RELEASE_VERSION .
-    - docker push $CI_REGISTRY_IMAGE:$RELEASE_VERSION
+    - docker build --tag $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
+    - docker push $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG
+
+build-public-image:
+  stage: publish
+  image: cregistry.pricefx.eu/docker-images/docker-with-buildx:v1.0.0
+  only:
+    - master
+  when: manual
+  extends: .with-dind
+  before_script:
+    - export DOCKER_IMAGE_TAG=${CI_COMMIT_BRANCH#*release/}
+  script:
+    - docker info
+    - echo -n $DOCKER_HUB_TOKEN | docker login -u pricefx --password-stdin docker.io
+    - docker pull index.docker.io/pricefx/pfxprobe:$DOCKER_IMAGE_TAG || true
+    - docker context create my-context
+    - docker buildx create --name multiarch-builder --use my-context
+    - docker buildx build --push --platform linux/arm64,linux/amd64 --tag index.docker.io/pricefx/pfxpackage:$DOCKER_IMAGE_TAG .
 
 .with-dind:
   variables:
