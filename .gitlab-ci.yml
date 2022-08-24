@@ -102,7 +102,6 @@ build-public-image:
   image: cregistry.pricefx.eu/docker-images/docker-with-buildx:v1.0.0
   only:
     - master
-  when: manual
   extends: .with-dind
   before_script:
     - export DOCKER_REGISTRY_IMAGE=index.docker.io/pricefx/pfxprobe
