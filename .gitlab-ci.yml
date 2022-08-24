@@ -89,7 +89,7 @@ build-private-image:
     - master
   extends: .with-dind
   before_script:
-    - export DOCKER_IMAGE_TAG=${CI_COMMIT_BRANCH#*release/}
+    - export DOCKER_IMAGE_TAG=latest
   script:
     - docker info
     - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
@@ -106,7 +106,7 @@ build-public-image:
   extends: .with-dind
   before_script:
     - export DOCKER_REGISTRY_IMAGE=index.docker.io/pricefx/pfxprobe
-    - export DOCKER_IMAGE_TAG=${CI_COMMIT_BRANCH#*release/}
+    - export DOCKER_IMAGE_TAG=latest
   script:
     - docker info
     - echo -n $DOCKER_HUB_TOKEN | docker login -u pricefx --password-stdin docker.io
