@@ -24,7 +24,7 @@ stages:
   - analyze
 
 pfxprobe:
-  image: cregistry.pricefx.eu/tools/pfxprobe
+  image: pricefx/pfxprobe
   stage: analyze
   only:
     - develop
@@ -41,20 +41,14 @@ pfxprobe:
 
 ### Docker Container Usage
 
-Step 1. Log In your Docker client to the private pfx gitlab registry:
-- Substitute **EMAILADDRESS** with your pricefx email address
-- Substitute **ACCESSTOKEN** below with a [personal access token](https://gitlab.pricefx.eu/profile/personal_access_tokens)
-    - Access token must be granted "read_registry" privilege
-        
-This step only needs to be done once
+On Windows, with cmd:
 ```
-docker login https://cregistry.pricefx.eu --username EMAILADDRESS --password ACCESSTOKEN
+docker run --rm -it --name pfxprobe -v %cd%:/code pricefx/pfxprobe pfxprobe -dir code
 ```
 
-Step 2. Run the following command from your source code parent folder (with Bash or PowerShell - NOT CMD)
-
+On Mac / Linux with bash:
 ```
-docker run --rm -it --name pfxprobe -v ${PWD}:/code cregistry.pricefx.eu/tools/pfxprobe bash pfxprobe -dir code
+docker run --rm -it --name pfxprobe -v ${PWD}:/code pricefx/pfxprobe pfxprobe -dir code
 ```
 
 ### JAR Usage
