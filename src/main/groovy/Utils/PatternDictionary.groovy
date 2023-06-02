@@ -50,9 +50,30 @@ class PatternDictionary {
                 ),
                 new PfxProbeIssuePattern(
                         "deprecated-getelement",
-                        "PFX - api.getElement() is deprecated. Please use out.elementName",
+                        "PFX - api.getElement() is deprecated. Please use out.elementName instead",
                         /api\.getElement/,
                         "major",
+                        "Style"
+                ),
+                new PfxProbeIssuePattern(
+                        "deprecated-getinput",
+                        "PFX - api.input() is deprecated. Please use input.inputName instead",
+                        /api\.input/,
+                        "major",
+                        "Style"
+                ),
+                new PfxProbeIssuePattern(
+                        "deprecated-list-add",
+                        "PFX - Use 'list << value' groovy operator instead",
+                        /\w*\.add\(/,
+                        "minor",
+                        "Style"
+                ),
+                new PfxProbeIssuePattern(
+                        "deprecated-map-put",
+                        "PFX - Use 'map.key = value' (or  'map.\"key with space\"= value') groovy operator",
+                        /\w*\.put\(/,
+                        "minor",
                         "Style"
                 ),
         ]
