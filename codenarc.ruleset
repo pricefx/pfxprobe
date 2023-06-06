@@ -3,6 +3,7 @@ ruleset {
     description '''
         A Sample Groovy RuleSet containing all CodeNarc Rules, grouped by category.
         You can use this as a template for your own custom RuleSet.
+        Just comment the rules that you don't want to include.
         '''
 
     // rulesets/basic.xml
@@ -47,8 +48,8 @@ ruleset {
     // MultipleUnaryOperators
     // RandomDoubleCoercedToZero
     // RemoveAllOnSelf
-    // ReturnFromFinallyBlock
-    // ThrowExceptionFromFinallyBlock
+    ReturnFromFinallyBlock
+    ThrowExceptionFromFinallyBlock
 
     // rulesets/braces.xml
     // ElseBlockBraces
@@ -105,7 +106,7 @@ ruleset {
     // CompileStatic
     // ConfusingTernary
     // CouldBeElvis
-    // CouldBeSwitchStatement
+    CouldBeSwitchStatement
     // FieldTypeRequired // we can't use class fields - will cause some weird errors
     // HashtableIsObsolete
     // IfStatementCouldBeTernary
@@ -177,7 +178,7 @@ ruleset {
     // CatchException
     // CatchIllegalMonitorStateException
     // CatchIndexOutOfBoundsException
-    // CatchNullPointerException
+    CatchNullPointerException
     // CatchRuntimeException
     // CatchThrowable
     // ConfusingClassNamedException
@@ -189,9 +190,9 @@ ruleset {
     // SwallowThreadDeath
     // ThrowError // We can't have our own exception types, so we may need some generic types
     // ThrowException
-    // ThrowNullPointerException
-    // ThrowRuntimeException
-    // ThrowThrowable
+    ThrowNullPointerException
+    ThrowRuntimeException
+    ThrowThrowable
 
     // rulesets/formatting.xml
     // BlankLineBeforePackage
@@ -288,13 +289,13 @@ ruleset {
     // UseCollectNested
 
     // rulesets/imports.xml
-    // DuplicateImport
+    DuplicateImport
     // ImportFromSamePackage
     // ImportFromSunPackages
     // MisorderedStaticImports // Conflicts with IntelliJ import formatting default settings
     // NoWildcardImports
-    // UnnecessaryGroovyImport
-    // UnusedImport
+    UnnecessaryGroovyImport
+    UnusedImport
 
     // rulesets/jdbc.xml
     // DirectConnectionManagement
@@ -334,9 +335,9 @@ ruleset {
     // LoggerWithWrongModifiers
     // LoggingSwallowsStacktrace
     // MultipleLoggers
-    // PrintStackTrace
+    PrintStackTrace
     // Println
-    // SystemErrPrint
+    SystemErrPrint
     // SystemOutPrint
 
     // rulesets/naming.xml
@@ -444,7 +445,7 @@ ruleset {
     // UnusedArray
     // UnusedMethodParameter
     // UnusedObject
-    // UnusedPrivateField
+    UnusedPrivateField
     // UnusedPrivateMethod
     // UnusedPrivateMethodParameter
     // UnusedVariable
