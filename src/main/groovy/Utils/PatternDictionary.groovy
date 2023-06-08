@@ -14,13 +14,6 @@ class PatternDictionary {
                         "Style"
                 ),
                 new PfxProbeIssuePattern(
-                        "harcoded-attribute",
-                        "HardCoded Attribute or Key, please use @Field final",
-                        /(?<!@Field.*)(attribute|key)\d+/,
-                        "major",
-                        "Style"
-                ),
-                new PfxProbeIssuePattern(
                         "deprecated-getelement",
                         "PFX - api.getElement() is deprecated. Please use out.elementName instead",
                         /api\.getElement/,
