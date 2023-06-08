@@ -21,13 +21,6 @@ class PatternDictionary {
                         "Style"
                 ),
                 new PfxProbeIssuePattern(
-                        "file-not-formatted",
-                        "File is not auto-formatted. Please use Ctrl+Alt+L in intellij before committing changes",
-                        /(?<!"""(?s).*)([\w'`)]=|=[\w'`(])((?!(?s).*"""))|(\)\{)(?s).*/,
-                        "minor",
-                        "Style"
-                ),
-                new PfxProbeIssuePattern(
                         "deprecated-getelement",
                         "PFX - api.getElement() is deprecated. Please use out.elementName instead",
                         /api\.getElement/,
