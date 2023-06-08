@@ -14,13 +14,6 @@ class PatternDictionary {
                         "Style"
                 ),
                 new PfxProbeIssuePattern(
-                        "logging-in-repo",
-                        "Don't commit logging to the repo",
-                        /(?<!isDebugMode.*\s*)api\.log/,
-                        "major",
-                        "Performance", "Style"
-                ),
-                new PfxProbeIssuePattern(
                         "lib-explicit-returns",
                         "Libs and methods should have explicit return types",
                         /def\s\w*\(.*\)/,
