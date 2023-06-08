@@ -14,13 +14,6 @@ class PatternDictionary {
                         "Style"
                 ),
                 new PfxProbeIssuePattern(
-                        "lib-explicit-returns",
-                        "Libs and methods should have explicit return types",
-                        /def\s\w*\(.*\)/,
-                        "major",
-                        "Style"
-                ),
-                new PfxProbeIssuePattern(
                         "use-stream-util",
                         "Use libs.SharedLib.StreamUtils.stream for safe stream handling",
                         /api\.stream/,
