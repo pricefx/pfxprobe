@@ -14,13 +14,6 @@ class PatternDictionary {
                         "Style"
                 ),
                 new PfxProbeIssuePattern(
-                        "use-stream-util",
-                        "Use libs.SharedLib.StreamUtils.stream for safe stream handling",
-                        /api\.stream/,
-                        "major",
-                        "Bug Risk", "Performance", "Style"
-                ),
-                new PfxProbeIssuePattern(
                         "harcoded-attribute",
                         "HardCoded Attribute or Key, please use @Field final",
                         /(?<!@Field.*)(attribute|key)\d+/,
