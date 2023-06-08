@@ -41,13 +41,6 @@ class PatternDictionary {
                         "minor",
                         "Style"
                 ),
-                new PfxProbeIssuePattern(
-                        "deprecated-map-put",
-                        "PFX - Use 'map.key = value' (or  'map.\"key with space\"= value') groovy operator",
-                        /\w*\.put\(/,
-                        "minor",
-                        "Style"
-                ),
         ]
     }
 }
