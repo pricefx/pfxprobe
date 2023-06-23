@@ -14,14 +14,14 @@ class PatternDictionary {
                         "Style"
                 ),
                 new PfxProbeIssuePattern(
-                        "deprecated-getelement",
+                        "deprecated-api-getelement",
                         "PFX - api.getElement() is deprecated. Please use out.elementName instead",
                         /api\.getElement/,
                         "major",
                         "Style"
                 ),
                 new PfxProbeIssuePattern(
-                        "deprecated-getinput",
+                        "deprecated-api-input",
                         "PFX - api.input() is deprecated. Please use input.inputName instead",
                         /api\.input/,
                         "major",

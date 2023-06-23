@@ -14,7 +14,17 @@ stages:
   - package
   - publish
 
-test:
+execution-test:
+  stage: test
+  only:
+    - merge_requests
+    - develop
+    - master
+    - release/accelerator
+  script:
+    - mvn package exec:java -Dexec.mainClass=Main -Dexec.args="-dir ."
+
+unit-tests:
   stage: test
   only:
     - merge_requests
@@ -39,9 +49,9 @@ report-coverage:
     - master
     - release/accelerator
   needs:
-    - test
+    - unit-tests
   dependencies:
-    - test
+    - unit-tests
   script:
     - python /opt/cover2cover.py target/site/jacoco/jacoco.xml src/main/groovy > target/site/coverage.xml
     - python /opt/source2filename.py target/site/coverage.xml
@@ -58,7 +68,7 @@ report-coverage:
 package:
   stage: package
   needs:
-    - test
+    - unit-tests
   only:
     - develop
     - master
@@ -72,7 +82,7 @@ package:
 publish-maven:
   stage: publish
   needs:
-    - test
+    - unit-tests
     - package
   script:
     - 'mvn deploy -s src/main/assembly/ci_settings.xml'
@@ -82,7 +92,7 @@ publish-maven:
 build-private-image:
   stage: publish
   needs:
-    - test
+    - unit-tests
     - package
   image: docker:19.03.8
   only:

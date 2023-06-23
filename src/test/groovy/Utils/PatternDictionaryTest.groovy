@@ -37,8 +37,8 @@ class PatternDictionaryTest extends Specification {
             "use-stream-util"               : /api.stream("P")/,
             "harcoded-attribute"            : /def t = "key1"/,
             "file-not-formatted"            : /def someMethod(){}/,
-            "deprecated-getelement"         : /api.getElement("SomeElement")/,
-            "deprecated-getinput"           : /api.input("SomeInput")/,
+            "deprecated-api-getelement"     : /api.getElement("SomeElement")/,
+            "deprecated-api-input"          : /api.input("SomeInput")/,
             "deprecated-list-add"           : /list.add(someValue")/,
             "deprecated-map-put"            : /map.put("key", someValue")/,
     ]
