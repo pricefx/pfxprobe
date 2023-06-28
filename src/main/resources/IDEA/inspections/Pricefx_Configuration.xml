@@ -1,0 +1,85 @@
+<profile version="1.0">
+  <description>Profile optimized for Pricefx logics</description>
+  <option name="myName" value="Pricefx Configuration" />
+  <inspection_tool class="CodeNarc.AssignmentInConditional" enabled="false" level="WARNING" enabled_by_default="false" />
+  <inspection_tool class="CodeNarc.BooleanMethodReturnsNull" enabled="false" level="WARNING" enabled_by_default="false" />
+  <inspection_tool class="CodeNarc.BracesForTryCatchFinally" enabled="true" level="WARNING" enabled_by_default="true">
+    <option name="catchOnSameLineAsClosingBrace" value="true" />
+    <option name="catchOnSameLineAsOpeningBrace" value="true" />
+    <option name="finallyOnSameLineAsClosingBrace" value="true" />
+    <option name="finallyOnSameLineAsOpeningBrace" value="true" />
+  </inspection_tool>
+  <inspection_tool class="CodeNarc.ClosureStatementOnOpeningLineOfMultipleLineClosure" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="CodeNarc.CompileStatic" enabled="false" level="WARNING" enabled_by_default="false">
+    <option name="doNotApplyToClassNames" value="*Spec,*Specification" />
+    <option name="doNotApplyToFileNames" value="*.gradle" />
+  </inspection_tool>
+  <inspection_tool class="CodeNarc.DuplicateStringLiteral" enabled="false" level="WARNING" enabled_by_default="false">
+    <option name="doNotApplyToClassNames" value="*Spec,*Specification" />
+  </inspection_tool>
+  <inspection_tool class="CodeNarc.ExplicitCallToCompareToMethod" enabled="true" level="WARNING" enabled_by_default="true" />
+  <inspection_tool class="CodeNarc.FieldTypeRequired" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+  <inspection_tool class="CodeNarc.ImplicitClosureParameter" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+  <inspection_tool class="CodeNarc.JavaIoPackageAccess" enabled="true" level="WARNING" enabled_by_default="true" />
+  <inspection_tool class="CodeNarc.JavadocEmptyFirstLine" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="CodeNarc.NestedForLoop" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+  <inspection_tool class="CodeNarc.NoDef" enabled="false" level="WEAK WARNING" enabled_by_default="false">
+    <option name="doNotApplyToFilesMatching" value=".*Controller\.groovy" />
+  </inspection_tool>
+  <inspection_tool class="CodeNarc.SpaceAfterMethodCallName" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="CodeNarc.UnnecessaryCollectCall" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+  <inspection_tool class="CodeNarc.UnnecessaryGString" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+  <inspection_tool class="CodeNarc.UnnecessaryGetter" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+  <inspection_tool class="CodeNarc.UnnecessarySemicolon" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+  <inspection_tool class="CodeNarc.UnusedArray" enabled="true" level="WARNING" enabled_by_default="true" />
+  <inspection_tool class="CodeNarc.UnusedMethodParameter" enabled="true" level="WARNING" enabled_by_default="true" />
+  <inspection_tool class="CodeNarc.UnusedObject" enabled="true" level="WARNING" enabled_by_default="true" />
+  <inspection_tool class="CodeNarc.UnusedPrivateField" enabled="true" level="WARNING" enabled_by_default="true" />
+  <inspection_tool class="CodeNarc.UnusedPrivateMethod" enabled="true" level="WARNING" enabled_by_default="true" />
+  <inspection_tool class="CodeNarc.UnusedPrivateMethodParameter" enabled="true" level="WARNING" enabled_by_default="true" />
+  <inspection_tool class="CodeNarc.UnusedVariable" enabled="true" level="WARNING" enabled_by_default="true" />
+  <inspection_tool class="CodeNarc.VariableName" enabled="false" level="WARNING" enabled_by_default="false" />
+  <inspection_tool class="CodeNarc.VariableTypeRequired" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+  <inspection_tool class="CustomRegExpInspection" enabled="true" level="WARNING" enabled_by_default="true">
+    <option name="myConfigurations">
+      <list>
+        <RegExpInspectionConfiguration>
+          <option name="description" value="You can easily replace all api.getElement() occurences in IDEA using search &amp; replace in files with regexp:&#10;Search regex: api\.getElement\(&quot;(\w+)\&quot;\)&#10;Replace regex: out.$1&#10;" />
+          <option name="name" value="deprecated-api-getelement" />
+          <option name="problemDescriptor" value="api.getElement() - use out.elementName instead" />
+          <option name="uuid" value="23fbf8ef-c7ce-3f6f-a860-2246f70f43c1" />
+          <option name="patterns">
+            <list>
+              <InspectionPattern>
+                <option name="regExp" value="api\.getElement" />
+                <option name="_fileType" value="Groovy" />
+                <option name="searchContext" value="ANY" />
+              </InspectionPattern>
+            </list>
+          </option>
+        </RegExpInspectionConfiguration>
+        <RegExpInspectionConfiguration>
+          <option name="description" value="You can easily replace all api.input() occurences in IDEA using search &amp; replace in files with regexp:&#10;Search regex: api\.input\(&quot;(\w+)\&quot;\)&#10;Replace regex: input.$1" />
+          <option name="name" value="deprecated-api-input" />
+          <option name="problemDescriptor" value="api.input() - use input.inputName instead" />
+          <option name="uuid" value="f6a09400-9736-34fe-b6a3-960e3143087d" />
+          <option name="patterns">
+            <list>
+              <InspectionPattern>
+                <option name="regExp" value="api\.input" />
+                <option name="_fileType" value="Groovy" />
+                <option name="searchContext" value="ANY" />
+              </InspectionPattern>
+            </list>
+          </option>
+        </RegExpInspectionConfiguration>
+      </list>
+    </option>
+  </inspection_tool>
+  <inspection_tool class="GrMethodMayBeStatic" enabled="false" level="WARNING" enabled_by_default="false" />
+  <inspection_tool class="GrUnresolvedAccess" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+  <inspection_tool class="GroovyListGetCanBeKeyedAccess" enabled="true" level="WARNING" enabled_by_default="true" />
+  <inspection_tool class="GroovyListSetCanBeKeyedAccess" enabled="true" level="WARNING" enabled_by_default="true" />
+  <inspection_tool class="GroovyMapGetCanBeKeyedAccess" enabled="true" level="WARNING" enabled_by_default="true" />
+  <inspection_tool class="GroovyMapPutCanBeKeyedAccess" enabled="true" level="WARNING" enabled_by_default="true" />
+</profile>
