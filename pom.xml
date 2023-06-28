@@ -12,16 +12,16 @@
 
     <properties>
         <!-- groovy -->
-        <groovy.version>2.5.13</groovy.version>
-        <spock.version>2.0-M3-groovy-2.5</spock.version>
+        <groovy.version>3.0.17</groovy.version>
+        <spock.version>2.4-M1-groovy-3.0</spock.version>
 
         <!-- java -->
         <source.jdk>11</source.jdk>
         <target.jdk>11</target.jdk>
 
         <!-- maven -->
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
+        <maven-compiler-plugin.version>3.11</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
         <gmavenplus-plugin.version>1.9.0</gmavenplus-plugin.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -204,7 +204,7 @@
         <dependency>
             <groupId>org.codenarc</groupId>
             <artifactId>CodeNarc</artifactId>
-            <version>2.0.0</version>
+            <version>3.2.0</version>
         </dependency>
         <!-- Test -->
         <dependency>

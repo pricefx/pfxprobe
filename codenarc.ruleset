@@ -3,7 +3,7 @@ ruleset {
     description '''
         A Sample Groovy RuleSet containing all CodeNarc Rules, grouped by category.
         You can use this as a template for your own custom RuleSet.
-        Just comment the rules that you don't want to include.
+        Just delete the rules that you don't want to include.
         '''
 
     // rulesets/basic.xml
@@ -46,6 +46,7 @@ ruleset {
     // HardCodedWindowsRootDirectory
     IntegerGetInteger
     MultipleUnaryOperators
+    ParameterAssignmentInFilterClosure
     RandomDoubleCoercedToZero
     RemoveAllOnSelf
     ReturnFromFinallyBlock
@@ -214,11 +215,15 @@ ruleset {
     // LineLength
     MissingBlankLineAfterImports
     MissingBlankLineAfterPackage
+    MissingBlankLineBeforeAnnotatedField
     SpaceAfterCatch
     SpaceAfterClosingBrace
     SpaceAfterComma
     SpaceAfterFor
     SpaceAfterIf
+    SpaceAfterMethodCallName
+    SpaceAfterMethodDeclarationName
+    SpaceAfterNotOperator
     SpaceAfterOpeningBrace
     SpaceAfterSemicolon
     SpaceAfterSwitch
@@ -228,6 +233,7 @@ ruleset {
     SpaceAroundOperator
     SpaceBeforeClosingBrace
     SpaceBeforeOpeningBrace
+    SpaceInsideParentheses
     TrailingWhitespace
 
     // rulesets/generic.xml
@@ -449,7 +455,6 @@ ruleset {
     UnnecessarySemicolon
     // UnnecessarySetter // Seems faulty. Will also catch keys in maps when values are closures
     UnnecessaryStringInstantiation
-    // UnnecessarySubstring
     UnnecessaryTernaryExpression
     UnnecessaryToString
     // UnnecessaryTransientModifier
