@@ -235,10 +235,10 @@ ruleset {
     // IllegalClassReference
     // IllegalPackageReference
     //IllegalRegex {
-    //    string = "api\\.input"
+    //    string = "api\\.input\\("
     //}
     //IllegalString {
-    //    regex = "api\\.getElement"
+    //    regex = "api\\.getElement\\("
     //}
     // IllegalSubclass
     // RequiredRegex

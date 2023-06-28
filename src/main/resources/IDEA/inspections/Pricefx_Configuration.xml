@@ -51,7 +51,7 @@
           <option name="patterns">
             <list>
               <InspectionPattern>
-                <option name="regExp" value="api\.getElement" />
+                <option name="regExp" value="api\.getElement\(" />
                 <option name="_fileType" value="Groovy" />
                 <option name="searchContext" value="ANY" />
               </InspectionPattern>
@@ -66,7 +66,7 @@
           <option name="patterns">
             <list>
               <InspectionPattern>
-                <option name="regExp" value="api\.input" />
+                <option name="regExp" value="api\.input\(" />
                 <option name="_fileType" value="Groovy" />
                 <option name="searchContext" value="ANY" />
               </InspectionPattern>
