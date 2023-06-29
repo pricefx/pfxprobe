@@ -128,6 +128,19 @@ build-public-image:
     - docker build --tag $DOCKER_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
     - docker push $DOCKER_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG
 
+deploy-idea-xml:
+  stage: publish
+  artifacts:
+    paths:
+      - "src/main/resources/IDEA/inspections/Pricefx_Configuration.xml"
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
+      changes:
+        - src/main/resources/IDEA/inspections/Pricefx_Configuration.xml
+  script:
+    - echo "Publishing Pricefx_Configuration.xml to https://developer.pricefx.eu/studio/codenarc/Pricefx_Configuration.xml"
+
+
 .with-dind:
   variables:
     DOCKER_HOST: tcp://docker:2376
