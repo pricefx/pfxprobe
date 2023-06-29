@@ -162,10 +162,10 @@ ruleset {
     // ToStringReturnsNull
 
     // rulesets/dry.xml
-    DuplicateListLiteral
-    DuplicateMapLiteral
-    // DuplicateNumberLiteral // It makes it weird to do some simple calculations
-    // DuplicateStringLiteral // We reuse these values in configurations. It's too nitpicky
+    // DuplicateListLiteral   // ["sku"] or customer business specific data
+    // DuplicateMapLiteral    // violations in highcharts definitions; calculations of customer business specific data may violate this
+    // DuplicateNumberLiteral // calculations of customer business specific data may violate this
+    // DuplicateStringLiteral // working with constants in PFX is cumbersome
 
     // rulesets/enhanced.xml
     // CloneWithoutCloneable

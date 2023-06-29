@@ -14,6 +14,12 @@
     <option name="doNotApplyToClassNames" value="*Spec,*Specification" />
     <option name="doNotApplyToFileNames" value="*.gradle" />
   </inspection_tool>
+  <inspection_tool class="CodeNarc.DuplicateListLiteral" enabled="false" level="WEAK WARNING" enabled_by_default="false">
+    <option name="doNotApplyToClassNames" value="*Spec,*Specification" />
+  </inspection_tool>
+  <inspection_tool class="CodeNarc.DuplicateMapLiteral" enabled="false" level="WEAK WARNING" enabled_by_default="false">
+    <option name="doNotApplyToClassNames" value="*Spec,*Specification" />
+  </inspection_tool>
   <inspection_tool class="CodeNarc.DuplicateNumberLiteral" enabled="false" level="WARNING" enabled_by_default="false">
     <option name="doNotApplyToClassNames" value="*Spec,*Specification" />
   </inspection_tool>
