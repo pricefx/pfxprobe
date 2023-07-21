@@ -1,25 +1,23 @@
 ruleset {
-
     description '''
         A Sample Groovy RuleSet containing all CodeNarc Rules, grouped by category.
         You can use this as a template for your own custom RuleSet.
         Just delete the rules that you don't want to include.
 
         Default active rules is a set that is used in Accelerator projects. Feel free to create your own sets.
+
+        Available rules revised at 3.2.0 version of codenarc: https://github.com/CodeNarc/CodeNarc/blob/master/CHANGELOG.md
         '''
 
     // rulesets/basic.xml
-    AssertWithinFinallyBlock
     AssignmentInConditional
     BigDecimalInstantiation
     BitwiseOperatorInConditional
     BooleanGetBoolean
     BrokenNullCheck
     BrokenOddnessCheck
-    // ClassForName
     ComparisonOfTwoConstants
     ComparisonWithSelf
-    ConstantAssertExpression
     ConstantIfExpression
     ConstantTernaryExpression
     DeadCode
@@ -33,21 +31,16 @@ ruleset {
     EmptyFinallyBlock
     EmptyForStatement
     EmptyIfStatement
-    EmptyInstanceInitializer
     EmptyMethod
-    EmptyStaticInitializer
+
     EmptySwitchStatement
     EmptySynchronizedStatement
     EmptyTryBlock
     EmptyWhileStatement
-    // EqualsAndHashCode
-    // EqualsOverloaded
-    // ExplicitGarbageCollection
     ForLoopShouldBeWhileLoop
-    HardCodedWindowsFileSeparator
-    HardCodedWindowsRootDirectory
     IntegerGetInteger
     MultipleUnaryOperators
+    ParameterAssignmentInFilterClosure
     RandomDoubleCoercedToZero
     RemoveAllOnSelf
     ReturnFromFinallyBlock
@@ -60,59 +53,30 @@ ruleset {
     WhileStatementBraces
 
     // rulesets/comments.xml
-    // ClassJavadoc
     JavadocConsecutiveEmptyLines
-    JavadocEmptyAuthorTag
     JavadocEmptyExceptionTag
     JavadocEmptyFirstLine
     JavadocEmptyLastLine
     JavadocEmptyParamTag
     JavadocEmptyReturnTag
     JavadocEmptySeeTag
-    JavadocEmptySinceTag
     JavadocEmptyThrowsTag
-    JavadocEmptyVersionTag
     JavadocMissingExceptionDescription
     JavadocMissingParamDescription
     JavadocMissingThrowsDescription
 
     // rulesets/concurrency.xml
-    // BusyWait
-    // DoubleCheckedLocking
-    // InconsistentPropertyLocking
-    // InconsistentPropertySynchronization
-    // NestedSynchronization
-    // StaticCalendarField
-    // StaticConnection
-    // StaticDateFormatField
-    // StaticMatcherField
-    // StaticSimpleDateFormatField
-    // SynchronizedMethod
-    // SynchronizedOnBoxedPrimitive
-    // SynchronizedOnGetClass
-    // SynchronizedOnReentrantLock
-    // SynchronizedOnString
-    // SynchronizedOnThis
-    // SynchronizedReadObjectMethod
-    // SystemRunFinalizersOnExit
-    // ThisReferenceEscapesConstructor
-    // ThreadGroup
-    // ThreadLocalNotStaticFinal
-    // ThreadYield
-    // UseOfNotifyMethod
-    // VolatileArrayField
-    // VolatileLongOrDoubleField
-    // WaitOutsideOfWhileLoop
 
     // rulesets/convention.xml
-    // CompileStatic
     ConfusingTernary
     CouldBeElvis
     CouldBeSwitchStatement
-    // FieldTypeRequired // we can't use class fields - will cause some weird errors
     HashtableIsObsolete
     IfStatementCouldBeTernary
-    ImplicitClosureParameter
+    ImplicitClosureParameter {
+        allowUsingItAsParameterName = true
+    }
+
     ImplicitReturnStatement
     InvertedCondition
     InvertedIfElse
@@ -121,82 +85,76 @@ ruleset {
     MethodReturnTypeRequired {
         ignoreMethodNames = "* *" // Skip checking unit test method names. Most of test cases have spaces in names so it should be good enough.
     }
-    // NoDef // On one hand side, it is useful, but on the other, we have a lot of defs where we can't use the PfX type or else tests will fail
+     NoDef {
+        priority = 3 // Low priority, because sometimes we don't know type from Core (but we should request it!)
+        doNotApplyToFileNames = '*Test.groovy'
+    }
     NoDouble
     NoFloat
     // NoJavaUtilDate // We can't use the suggested java.time.* package either way
-    // NoTabCharacter
+    NoTabCharacter
     ParameterReassignment
     PublicMethodsBeforeNonPublicMethods
-    // StaticFieldsBeforeInstanceFields
-    // StaticMethodsBeforeInstanceMethods
     TernaryCouldBeElvis
-    // TrailingComma
-    // VariableTypeRequired // Same as NoDef
-    // VectorIsObsolete
-
-    // rulesets/design.xml
-    // AbstractClassWithPublicConstructor
-    // AbstractClassWithoutAbstractMethod
-    // AssignmentToStaticFieldFromInstanceMethod
-    BooleanMethodReturnsNull
-    // BuilderMethodWithSideEffects
-    // CloneableWithoutClone
-    // CloseWithoutCloseable
-    // CompareToWithoutComparable
-    // ConstantsOnlyInterface
-    // EmptyMethodInAbstractClass
-    // FinalClassWithProtectedMember
-    // ImplementationAsType
-    // Instanceof
-    // LocaleSetDefault
-    NestedForLoop
-    // OptionalCollectionReturnType
-    // OptionalField
-    // OptionalMethodParameter
-    // PrivateFieldCouldBeFinal
-    // PublicInstanceField
-    ReturnsNullInsteadOfEmptyArray
-    ReturnsNullInsteadOfEmptyCollection
-    // SimpleDateFormatMissingLocale
-    // StatelessSingleton
-    // ToStringReturnsNull
-
-    // rulesets/dry.xml
-    DuplicateListLiteral
-    DuplicateMapLiteral
-    // DuplicateNumberLiteral // It makes it weird to do some simple calculations
-    // DuplicateStringLiteral // We reuse these values in configurations. It's too nitpicky
-
-    // rulesets/enhanced.xml
-    // CloneWithoutCloneable
-    // JUnitAssertEqualsConstantActualValue
-    // MissingOverrideAnnotation
-    // UnsafeImplementationAsMap
-
-    // rulesets/exceptions.xml
-    CatchArrayIndexOutOfBoundsException
-    CatchError
-    // CatchException
-    CatchIllegalMonitorStateException
-    CatchIndexOutOfBoundsException
-    CatchNullPointerException
-    // CatchRuntimeException
-    CatchThrowable
-    ConfusingClassNamedException
-    ExceptionExtendsError
-    ExceptionExtendsThrowable
-    ExceptionNotThrown
-    MissingNewInThrowStatement
-    ReturnNullFromCatchBlock
-    SwallowThreadDeath
-    // ThrowError // We can't have our own exception types, so we may need some generic types
-    // ThrowException
-    // ThrowNullPointerException
-    ThrowRuntimeException {
+    VariableTypeRequired {
+        priority = 3 // Same as NoDef
         doNotApplyToFileNames = '*Test.groovy'
     }
-    // ThrowThrowable
+    VectorIsObsolete
+
+    // rulesets/design.xml
+    AssignmentToStaticFieldFromInstanceMethod
+    BooleanMethodReturnsNull
+    ImplementationAsType
+    NestedForLoop
+    OptionalCollectionReturnType
+    OptionalField
+    OptionalMethodParameter
+    ReturnsNullInsteadOfEmptyArray
+    ReturnsNullInsteadOfEmptyCollection
+
+    // rulesets/dry.xml
+    DuplicateListLiteral {
+        doNotApplyToFileNames = '*ConstConfig.groovy,*ConstConfigs.groovy'
+        priority = 3
+    }
+    DuplicateMapLiteral {
+        doNotApplyToFileNames = '*ConstConfig.groovy,*ConstConfigs.groovy'
+        priority = 3
+    }
+    DuplicateStringLiteral  {
+        doNotApplyToFileNames = '*ConstConfig.groovy,*ConstConfigs.groovy'
+        priority = 3
+    }
+
+    // rulesets/enhanced.xml
+
+    // rulesets/exceptions.xml
+    CatchArrayIndexOutOfBoundsException {
+        doNotApplyToFileNames = '*Test.groovy'
+    }
+    CatchError {
+        doNotApplyToFileNames = '*Test.groovy'
+    }
+    CatchException {
+        doNotApplyToFileNames = '*Test.groovy'
+    }
+    CatchIndexOutOfBoundsException {
+        doNotApplyToFileNames = '*Test.groovy'
+    }
+    CatchNullPointerException {
+        doNotApplyToFileNames = '*Test.groovy'
+    }
+    CatchRuntimeException {
+        doNotApplyToFileNames = '*Test.groovy'
+    }
+    CatchThrowable {
+        doNotApplyToFileNames = '*Test.groovy'
+    }
+    ExceptionNotThrown {
+        doNotApplyToFileNames = '*Test.groovy'
+    }
+    ReturnNullFromCatchBlock
 
     // rulesets/formatting.xml
     BlankLineBeforePackage
@@ -207,15 +165,20 @@ ruleset {
     BracesForIfElse
     BracesForMethod
     BracesForTryCatchFinally
-    ClassEndsWithBlankLine
-    ClassStartsWithBlankLine
     ClosureStatementOnOpeningLineOfMultipleLineClosure
     ConsecutiveBlankLines
     FileEndsWithoutNewline
-    // Indentation
-    // LineLength
+    LineLength {
+        priority = 3
+        length = 160 // default 120 seems to be very strict, especially our "tab" is formatted to 4 spaces instead of 2
+        doNotApplyToFileNames = '*Test.groovy'
+    }
     MissingBlankLineAfterImports
     MissingBlankLineAfterPackage
+    MissingBlankLineBeforeAnnotatedField
+    SpaceAfterMethodCallName
+    SpaceAfterMethodDeclarationName
+    SpaceAfterNotOperator
     SpaceAfterCatch
     SpaceAfterClosingBrace
     SpaceAfterComma
@@ -226,36 +189,45 @@ ruleset {
     SpaceAfterSwitch
     SpaceAfterWhile
     SpaceAroundClosureArrow
-    // SpaceAroundMapEntryColon // Conflicts with IntelliJ autoformatting of maps
     SpaceAroundOperator
     SpaceBeforeClosingBrace
     SpaceBeforeOpeningBrace
+    SpaceInsideParentheses
     TrailingWhitespace
+
 
     // rulesets/generic.xml
     // IllegalClassMember
     // IllegalClassReference
     // IllegalPackageReference
     // IllegalRegex
-    // IllegalString
+    IllegalString {
+        name = 'PrivateAccessModifier'
+        string = 'private '
+    }
+    IllegalString {
+        name = 'AssertKeyword'
+        string = ' assert '
+        doNotApplyToFileNames = '*Test.groovy'
+    }
+    IllegalString {
+        name = 'ThrowKeyword'
+        string = 'throw new'
+        doNotApplyToFileNames = '*Test.groovy'
+    }
+    IllegalString {
+        name = 'CallToApiTrace'
+        string = 'api.trace('
+    }
+    IllegalString {
+        name = 'CallToApiLogInfo'
+        string = 'api.logInfo('
+    }
     // IllegalSubclass
     // RequiredRegex
     // RequiredString
-    // StatelessClass
 
     // rulesets/grails.xml
-    // GrailsDomainGormMethods
-    // GrailsDomainHasEquals
-    // GrailsDomainHasToString
-    // GrailsDomainReservedSqlKeywordName
-    // GrailsDomainStringPropertyMaxSize
-    // GrailsDomainWithServiceReference
-    // GrailsDuplicateConstraint
-    // GrailsDuplicateMapping
-    // GrailsMassAssignment
-    // GrailsPublicControllerMethod
-    // GrailsServletContextReference
-    // GrailsStatelessService
 
     // rulesets/groovyism.xml
     AssignCollectionSort
@@ -264,16 +236,12 @@ ruleset {
     CollectAllIsDeprecated
     ConfusingMultipleReturns
     ExplicitArrayListInstantiation
-    // ExplicitCallToAndMethod // It catches also Filter calls
     ExplicitCallToCompareToMethod
     ExplicitCallToDivMethod
-    // ExplicitCallToEqualsMethod // It catches also Filter calls
-    // ExplicitCallToGetAtMethod // We use a lot of it, because it is the safest for null-checking and works on both, lists and maps.
     ExplicitCallToLeftShiftMethod
     ExplicitCallToMinusMethod
     ExplicitCallToModMethod
     ExplicitCallToMultiplyMethod
-    // ExplicitCallToOrMethod // It catches also Filter calls
     ExplicitCallToPlusMethod
     ExplicitCallToPowerMethod
     ExplicitCallToPutAtMethod
@@ -287,81 +255,38 @@ ruleset {
     ExplicitTreeSetInstantiation
     GStringAsMapKey
     GStringExpressionWithinString
-    // GetterMethodCouldBeProperty // We don't use properties, so it returns weird results
-    // GroovyLangImmutable
     UseCollectMany
     UseCollectNested
 
     // rulesets/imports.xml
     DuplicateImport
-    // ImportFromSamePackage
-    // ImportFromSunPackages
-    // MisorderedStaticImports // Conflicts with IntelliJ import formatting default settings
+    ImportFromSunPackages
     NoWildcardImports
     UnnecessaryGroovyImport
     UnusedImport
 
     // rulesets/jdbc.xml
-    // DirectConnectionManagement
-    // JdbcConnectionReference
-    // JdbcResultSetReference
-    // JdbcStatementReference
 
     // rulesets/junit.xml
     ChainedTest
     CoupledTestCase
-    // We use Spock
-    // JUnitAssertAlwaysFails
-    // JUnitAssertAlwaysSucceeds
-    // JUnitFailWithoutMessage
-    // JUnitLostTest
-    // JUnitPublicField
-    // JUnitPublicNonTestMethod
-    // JUnitPublicProperty
-    // JUnitSetUpCallsSuper
-    // JUnitStyleAssertions
-    // JUnitTearDownCallsSuper
-    // JUnitTestMethodWithoutAssert
-    // JUnitUnnecessarySetUp
-    // JUnitUnnecessaryTearDown
-    // JUnitUnnecessaryThrowsException
     SpockIgnoreRestUsed
-    // UnnecessaryFail
-    // UseAssertEqualsInsteadOfAssertTrue
-    // UseAssertFalseInsteadOfNegation
-    // UseAssertNullInsteadOfAssertEquals
-    // UseAssertSameInsteadOfAssertTrue
-    // UseAssertTrueInsteadOfAssertEquals
-    // UseAssertTrueInsteadOfNegation
 
     // rulesets/logging.xml
-    // LoggerForDifferentClass
-    // LoggerWithWrongModifiers
-    // LoggingSwallowsStacktrace
-    // MultipleLoggers
     PrintStackTrace
     Println
     SystemErrPrint
     SystemOutPrint
 
     // rulesets/naming.xml
-    // AbstractClassName
-    // ClassName
-    // ClassNameSameAsFilename
-    // ClassNameSameAsSuperclass
     ConfusingMethodName
-    // FactoryMethodName
     FieldName {
         regex = "([a-z_][a-zA-Z0-9]*)|([A-Z][A-Z0-9_]*)"
     }
-    // InterfaceName
-    // InterfaceNameSameAsSuperInterface
     MethodName {
         doNotApplyToFileNames = '*Test.groovy'
     }
     // ObjectOverrideMisspelledMethodName
-    // PackageName
-    // PackageNameMatchesFilePath
     ParameterName {
         regex = "[a-z_][a-zA-Z0-9]*"
     }
@@ -371,35 +296,22 @@ ruleset {
     }
 
     // rulesets/security.xml
-    // Not sure we can do any of it
-    // FileCreateTempFile
-    // InsecureRandom
-    // JavaIoPackageAccess
-    // NonFinalPublicField
-    // NonFinalSubclassOfSensitiveInterface
-    // ObjectFinalize
-    // PublicFinalizeMethod
-    // SystemExit
-    // UnsafeArrayDeclaration
 
     // rulesets/serialization.xml
-    // EnumCustomSerializationIgnored
-    // SerialPersistentFields
-    // SerialVersionUID
-    // SerializableClassMustDefineSerialVersionUID
 
     // rulesets/size.xml
     AbcMetric { // Requires the GMetrics jar
-        doNotApplyToFileNames = '*Test.groovy'
+        doNotApplyToFileNames = '*Test.groovy,*Util.groovy,*Utils.groovy,*Manager.groovy'
     }
     ClassSize
-    // CrapMetric   // Requires the GMetrics jar and a Cobertura coverage file - we don't have coverage
-    CyclomaticComplexity   // Requires the GMetrics jar
+    CyclomaticComplexity { // Requires the GMetrics jar
+        doNotApplyToFileNames = '*Test.groovy,*Util.groovy,*Utils.groovy,*Manager.groovy'
+    }
     MethodCount
     MethodSize
     NestedBlockDepth // Default is 5, but isn't it customary to stop at 3?
     ParameterCount {
-        priority = 3
+        doNotApplyToFileNames = '*Util.groovy,*Utils.groovy,*Manager.groovy'
     }
 
     // rulesets/unnecessary.xml
@@ -416,19 +328,14 @@ ruleset {
     UnnecessaryCallToSubstring
     UnnecessaryCast
     UnnecessaryCatchBlock
-    // UnnecessaryCollectCall
+    UnnecessaryCollectCall {
+        priority = 3 // groovism, not really important
+    }
     UnnecessaryCollectionCall
-    // UnnecessaryConstructor
-    // UnnecessaryDefInFieldDeclaration
-    // UnnecessaryDefInMethodDeclaration
-    // UnnecessaryDefInVariableDeclaration
     UnnecessaryDotClass
     UnnecessaryDoubleInstantiation
     UnnecessaryElseStatement
-    UnnecessaryFinalOnPrivateMethod
     UnnecessaryFloatInstantiation
-    // UnnecessaryGString // It may be too nitpicky. It doesn't make so much difference to differentiate String from GString usually
-    // UnnecessaryGetter // Seems faulty. Will also catch keys in maps when values are closures
     UnnecessaryIfStatement
     UnnecessaryInstanceOfCheck
     UnnecessaryInstantiationToGetClass
@@ -437,28 +344,39 @@ ruleset {
     UnnecessaryModOne
     UnnecessaryNullCheck
     UnnecessaryNullCheckBeforeInstanceOf
-    // UnnecessaryObjectReferences
-    UnnecessaryOverridingMethod
+    UnnecessaryObjectReferences {
+        priority = 3 // groovism, not really important
+    }
     UnnecessaryPackageReference
     UnnecessaryParenthesesForMethodCallWithClosure
     UnnecessaryPublicModifier
-    // UnnecessaryReturnKeyword
     UnnecessarySafeNavigationOperator
     UnnecessarySelfAssignment
     UnnecessarySemicolon
-    // UnnecessarySetter // Seems faulty. Will also catch keys in maps when values are closures
     UnnecessaryStringInstantiation
-    // UnnecessarySubstring
     UnnecessaryTernaryExpression
     UnnecessaryToString
-    // UnnecessaryTransientModifier
 
     // rulesets/unused.xml
     UnusedArray
     UnusedMethodParameter
     UnusedObject
-    UnusedPrivateField
-    UnusedPrivateMethod
-    UnusedPrivateMethodParameter
     UnusedVariable
+
+    // Test only rules:
+    EmptyInstanceInitializer {
+        applyToFileNames = '*Test.groovy'
+    }
+    ConfusingClassNamedException {
+        applyToFileNames = '*Test.groovy'
+    }
+    ClassEndsWithBlankLine {
+        applyToFileNames = '*Test.groovy'
+    }
+    ClassStartsWithBlankLine {
+        applyToFileNames = '*Test.groovy'
+    }
+    EmptyStaticInitializer {
+        applyToFileNames = '*Test.groovy'
+    }
 }
