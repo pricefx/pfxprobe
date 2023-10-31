@@ -154,7 +154,9 @@ ruleset {
     ExceptionNotThrown {
         doNotApplyToFileNames = '*Test.groovy'
     }
-    ReturnNullFromCatchBlock
+    ReturnNullFromCatchBlock {
+        priority = 3
+    }
 
     // rulesets/formatting.xml
     BlankLineBeforePackage
