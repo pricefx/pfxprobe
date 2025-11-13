@@ -2,3 +2,5 @@
 target
 codeclimate.json
 *.iml
+.direnv
+CodeNarcCodeJsonReport.json

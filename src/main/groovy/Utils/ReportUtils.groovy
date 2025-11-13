@@ -28,4 +28,57 @@ class ReportUtils {
 
         codeClimateReport.setText(new JsonBuilder(allIssuesFormatted).toString().replace("},{", "},\n{"))
     }
+
+    static void printQualityGateReport(List<PfxProbeIssue> codeIssues, String minSeverity = "info") {
+        if (codeIssues.isEmpty()) {
+            println "✅ No code quality issues found!"
+            return
+        }
+
+        int issueCount = codeIssues.size()
+        println "❌ Found ${issueCount} code quality issue(s)"
+        if (minSeverity != "info") {
+            println "   Quality gate threshold: ${minSeverity.toUpperCase()} and above"
+        }
+        println ""
+
+        // Print individual issues
+        codeIssues.each { issue ->
+            Map<String, Object> format = issue.getCodeClimateIssueFormat()
+            
+            println "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            println ""
+            println "  🔴 [${issue.getIssueSeverity().toUpperCase()}] ${format.check_name}"
+            println "  📄 ${format.location.path}:${format.location.lines.begin}"
+            println "  💬 ${issue.getIssueDescription()}"
+            println ""
+        }
+
+        // Print summaries
+        println "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        println ""
+        println "📊 Summary by severity:"
+        
+        Map<String, Integer> severityCounts = codeIssues
+            .groupBy { it.getIssueSeverity() }
+            .collectEntries { severity, issues -> [severity, issues.size()] }
+        
+        severityCounts.each { severity, count ->
+            println "   • ${severity.toUpperCase()}: ${count}"
+        }
+
+        println ""
+        println "📋 Summary by check:"
+        
+        Map<String, Integer> checkCounts = codeIssues
+            .groupBy { it.getCodeClimateIssueFormat().check_name }
+            .collectEntries { check, issues -> [check, issues.size()] }
+            .sort { -it.value }
+        
+        checkCounts.each { check, count ->
+            println "   • ${check}: ${count}"
+        }
+
+        println ""
+    }
 }

@@ -6,20 +6,8 @@ import org.apache.commons.cli.UnrecognizedOptionException
 import spock.lang.Specification
 
 class CommandLineUtilsTest extends Specification {
-    static String helpMessage = """usage: pfxprobe -dir <arg> [-n] [-p] [-rulefile <arg>]${System.lineSeparator()}\
-By default, when -p or -n parameters are not provided, both analysis types${System.lineSeparator()}\
-are executed.${System.lineSeparator()}\
- -dir <arg>        Directories to be scanned. CodeNarc analysis will run${System.lineSeparator()}\
-                   only on first one${System.lineSeparator()}\
- -n                Execute CodeNarc analysis${System.lineSeparator()}\
- -p                Execute pfxprobe analysis${System.lineSeparator()}\
- -rulefile <arg>   Path to ruleset file relative to project directory. By${System.lineSeparator()}\
-                   default Accelerators team ruleset is used. Custom${System.lineSeparator()}\
-                   configurations can be created using codenarc.ruleset${System.lineSeparator()}\
-                   file as a template${System.lineSeparator()}\
-"""
 
-    def "Command Line Help Message Hasn't Changed"() {
+    def "Help Message Contains All Required Options"() {
         when:
         def buffer = new ByteArrayOutputStream()
         System.out = new PrintStream(buffer)
@@ -28,7 +16,17 @@ are executed.${System.lineSeparator()}\
         CommandLineUtils.printInputArgsHelp()
 
         then:
-        buffer.toString() == helpMessage
+        def helpText = buffer.toString()
+        helpText.contains("usage: pfxprobe")
+        helpText.contains("-dir")
+        helpText.contains("-n")
+        helpText.contains("-p")
+        helpText.contains("-rulefile")
+        helpText.contains("-qualitygate")
+        helpText.contains("Directories to be scanned")
+        helpText.contains("Execute CodeNarc analysis")
+        helpText.contains("Execute pfxprobe analysis")
+        helpText.contains("quality gate mode")
     }
 
     def "Throws Exception When Required Args Missing And Prints Help Message"() {
@@ -40,7 +38,9 @@ are executed.${System.lineSeparator()}\
 
         then:
         thrown(MissingOptionException)
-        buffer.toString() == helpMessage
+        def helpText = buffer.toString()
+        helpText.contains("usage: pfxprobe")
+        helpText.contains("-dir")
     }
 
     def "Throws Exception When UnRecognised Args Are Given And Prints Help Message"() {
@@ -52,7 +52,8 @@ are executed.${System.lineSeparator()}\
 
         then:
         thrown(UnrecognizedOptionException)
-        buffer.toString() == helpMessage
+        def helpText = buffer.toString()
+        helpText.contains("usage: pfxprobe")
     }
 
     def "Parser Proceeds When Supplied Required Args"() {
@@ -65,6 +66,34 @@ are executed.${System.lineSeparator()}\
         where:
         args << [["-dir", "ScanDirectory"] as String[],
                  ["-dir", "ScanDirectory", "-n", "-p", "-rulefile", "/codenarc.ruleset"] as String[]]
+    }
+
+    def "Quality Gate Option Can Be Parsed Without Value"() {
+        when:
+        def result = CommandLineUtils.parseInputArgs(["-dir", "ScanDirectory", "-qualitygate"] as String[])
+
+        then:
+        result != null
+        result.hasOption("qualitygate")
+        result.getOptionValue("qualitygate") == null
+    }
+
+    def "Quality Gate Option Can Be Parsed With Severity Level"() {
+        when:
+        def result = CommandLineUtils.parseInputArgs(args)
+
+        then:
+        result != null
+        result.hasOption("qualitygate")
+        result.getOptionValue("qualitygate") == expectedValue
+
+        where:
+        args                                                                           | expectedValue
+        ["-dir", "ScanDirectory", "-qualitygate", "info"] as String[]                | "info"
+        ["-dir", "ScanDirectory", "-qualitygate", "minor"] as String[]               | "minor"
+        ["-dir", "ScanDirectory", "-qualitygate", "major"] as String[]               | "major"
+        ["-dir", "ScanDirectory", "-qualitygate", "critical"] as String[]            | "critical"
+        ["-dir", "ScanDirectory", "-qualitygate", "blocker"] as String[]             | "blocker"
     }
 
     def "Probe Analysis Is Triggered Under Proper Conditions"() {

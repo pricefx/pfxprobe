@@ -5,7 +5,7 @@ import groovy.json.JsonSlurper
 import org.codenarc.CodeNarc
 
 class CodeNarcUtils {
-    final static String defaultRulesFileAbsolutePath = "/codenarc.ruleset"
+    final static String defaultRulesFileAbsolutePath = "./codenarc.ruleset"
     final static String jsonCodeReportFileName = 'CodeNarcCodeJsonReport.json'
 
     static List<CodeNarcIssue> getCodeNarcIssues(String[] scanDirs, String userRulesFileRelativePath) {

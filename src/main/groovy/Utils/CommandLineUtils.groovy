@@ -22,6 +22,9 @@ class CommandLineUtils {
     final static String narcRulesFileArg = "rulefile"
     final static String narcRulesFileDesc = "Path to ruleset file relative to project directory. By default Accelerators team ruleset is used. Custom configurations can be created using codenarc.ruleset file as a template"
 
+    final static String qualityGateArg = "qualitygate"
+    final static String qualityGateDesc = "Enable quality gate mode: displays detailed issue report and fails if issues are found at or above the specified severity level. Valid levels: info, minor, major, critical, blocker. Defaults to 'info' (any issue fails)"
+
 
     private static Options getParserOptions() {
         Option probeAnalysis = new Option(probeAnalysisArg, false, probeAnalysisDesc)
@@ -29,11 +32,14 @@ class CommandLineUtils {
         scanDir.setRequired(true)
         Option narcAnalysis = new Option(narcAnalysisArg, false, narcAnalysisDesc)
         Option narcRulesFile = new Option(narcRulesFileArg, true, narcRulesFileDesc)
+        Option qualityGate = new Option(qualityGateArg, true, qualityGateDesc)
+        qualityGate.setOptionalArg(true)
 
         return new Options().addOption(probeAnalysis)
                 .addOption(scanDir)
                 .addOption(narcAnalysis)
                 .addOption(narcRulesFile)
+                .addOption(qualityGate)
     }
 
     static void printInputArgsHelp() {

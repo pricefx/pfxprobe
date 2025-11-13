@@ -53,35 +53,77 @@ docker run --rm -it --name pfxprobe -v ${PWD}:/code pricefx/pfxprobe pfxprobe -d
 
 ### JAR Usage
 
-```
-usage: java -jar pfxprobe.jar -dir <arg> [-n] [-p] [-rulefile <arg>]
-By default, when -p or -n parameters are not provided, both analysis types
-are executed.
- -dir <arg>        Directories to be scanned. CodeNarc analysis will run
-                   only on first one
- -n                Execute CodeNarc analysis
- -p                Execute pfxprobe analysis
- -rulefile <arg>   Path to ruleset file relative to project directory. By
-                   default Accelerators team ruleset is used. Custom
-                   configurations can be created using codenarc.ruleset
-                   file as a template
+```bash
+java -jar pfxprobe.jar -dir <directory> [options]
+
+Options:
+  -dir <arg>            Directories to be scanned (CodeNarc runs on first directory only)
+  -n                    Execute CodeNarc analysis only
+  -p                    Execute pfxprobe analysis only
+  -rulefile <arg>       Path to CodeNarc ruleset file (defaults to ./codenarc.ruleset)
+  -qualitygate [level]  Enable quality gate mode with optional severity threshold
+                        Displays detailed report and fails build if issues found
+                        Valid levels: info, minor, major, critical, blocker
+                        Default: info (fails on any issue)
+
+Examples:
+  java -jar pfxprobe.jar -dir .
+  java -jar pfxprobe.jar -dir . -qualitygate
+  java -jar pfxprobe.jar -dir . -qualitygate major
+  java -jar pfxprobe.jar -dir src -rulefile ./custom-rules.ruleset -qualitygate blocker
 ```
 
 ### CLI Usage
 
+```bash
+pfxprobe -dir <directory> [options]
+
+Options:
+  -dir <arg>            Directories to be scanned (CodeNarc runs on first directory only)
+  -n                    Execute CodeNarc analysis only
+  -p                    Execute pfxprobe analysis only
+  -rulefile <arg>       Path to CodeNarc ruleset file (defaults to ./codenarc.ruleset)
+  -qualitygate [level]  Enable quality gate mode with optional severity threshold
+                        Displays detailed report and fails build if issues found
+                        Valid levels: info, minor, major, critical, blocker
+                        Default: info (fails on any issue)
+
+Examples:
+  pfxprobe -dir .
+  pfxprobe -dir . -qualitygate
+  pfxprobe -dir . -qualitygate major
+  pfxprobe -dir src -rulefile ./custom-rules.ruleset -qualitygate blocker
 ```
-usage: pfxprobe -dir <arg> [-n] [-p] [-rulefile <arg>]
-By default, when -p or -n parameters are not provided, both analysis types
-are executed.
- -dir <arg>        Directories to be scanned. CodeNarc analysis will run
-                   only on first one
- -n                Execute CodeNarc analysis
- -p                Execute pfxprobe analysis
- -rulefile <arg>   Path to ruleset file relative to project directory. By
-                   default Accelerators team ruleset is used. Custom
-                   configurations can be created using codenarc.ruleset
-                   file as a template
+
+### Quality Gate Feature
+
+The quality gate feature provides enhanced reporting and enforces build failures based on code quality issues:
+
+**Severity Levels** (from lowest to highest):
+- `info` - Informational issues
+- `minor` - Minor code quality issues
+- `major` - Significant issues that should be addressed
+- `critical` - Critical issues requiring immediate attention
+- `blocker` - Blocking issues that must be fixed
+
+**Usage in CI/CD:**
+```yaml
+pfxprobe:
+  image: pricefx/pfxprobe
+  stage: analyze
+  script:
+    - pfxprobe -dir . -qualitygate major  # Fail on major+ issues
+  artifacts:
+    when: always
+    reports:
+      codequality: codeclimate.json
 ```
+
+**Quality Gate Output:**
+- Individual issue details with file location and description
+- Summary grouped by severity level
+- Summary grouped by check type
+- Exit code 1 if threshold exceeded, 0 if passed
 
 ### Attributions
 
