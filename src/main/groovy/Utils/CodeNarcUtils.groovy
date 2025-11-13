@@ -5,8 +5,35 @@ import groovy.json.JsonSlurper
 import org.codenarc.CodeNarc
 
 class CodeNarcUtils {
-    final static String defaultRulesFileAbsolutePath = "./codenarc.ruleset"
     final static String jsonCodeReportFileName = 'CodeNarcCodeJsonReport.json'
+
+    /**
+     * Resolves the default ruleset file path.
+     * Checks if the absolute path exists (Docker/CI environment), otherwise uses relative path (local development).
+     */
+    private static String getDefaultRulesFilePath() {
+        final String absolutePath = "/codenarc.ruleset"
+        final String relativePath = "./codenarc.ruleset"
+        
+        boolean absoluteExists = new File(absolutePath).exists()
+        boolean relativeExists = new File(relativePath).exists()
+        
+        println("DEBUG: Checking ruleset paths - absolute [$absolutePath] exists: $absoluteExists, relative [$relativePath] exists: $relativeExists")
+        
+        if (absoluteExists) {
+            println("DEBUG: Using absolute path: $absolutePath")
+            return absolutePath
+        }
+        
+        if (relativeExists) {
+            println("DEBUG: Using relative path: $relativePath")
+            return relativePath
+        }
+        
+        // If neither exists, return absolute path (will be used in Docker/CI where it should exist)
+        println("DEBUG: Neither path exists, defaulting to absolute path: $absolutePath")
+        return absolutePath
+    }
 
     static List<CodeNarcIssue> getCodeNarcIssues(String[] scanDirs, String userRulesFileRelativePath) {
         println("Starting codeNarc analysis")
@@ -28,7 +55,7 @@ class CodeNarcUtils {
      * @param userRulesFilePath String containing path to ruleset file. Relative to repository root directory or absolute.
      */
     private static void runAnalysis(String scanDir, String userRulesFilePath) {
-        String rulesFilePath = userRulesFilePath ?: defaultRulesFileAbsolutePath
+        String rulesFilePath = userRulesFilePath ?: getDefaultRulesFilePath()
 
         safeExecuteAnalysisForDir(rulesFilePath, scanDir)
     }
