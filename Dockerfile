@@ -1,4 +1,4 @@
-FROM openjdk:11-slim-buster
+FROM eclipse-temurin:21-jre-jammy
 
 # copy default CodeNarc ruleset
 ADD codenarc.ruleset /

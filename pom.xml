@@ -16,8 +16,8 @@
         <spock.version>2.4-M1-groovy-3.0</spock.version>
 
         <!-- java -->
-        <source.jdk>11</source.jdk>
-        <target.jdk>11</target.jdk>
+        <source.jdk>21</source.jdk>
+        <target.jdk>21</target.jdk>
 
         <!-- maven -->
         <maven-compiler-plugin.version>3.11</maven-compiler-plugin.version>
@@ -74,6 +74,7 @@
                         <include>**/*Test.java</include>
                         <include>**/*Spec.java</include>
                     </includes>
+                    <argLine>@{argLine} --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED</argLine>
                 </configuration>
             </plugin>
 
@@ -81,7 +82,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.5</version>
+                <version>0.8.12</version>
                 <executions>
                     <execution>
                         <goals>
@@ -219,7 +220,7 @@
         </dependency>
         <dependency>
             <groupId>cglib</groupId>
-            <artifactId>cglib-nodep</artifactId>
+            <artifactId>cglib</artifactId>
             <version>3.3.0</version>
         </dependency>
     </dependencies>

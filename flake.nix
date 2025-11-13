@@ -22,7 +22,7 @@
             exit 1
           fi
 
-          ${pkgs.jdk11}/bin/java -jar "$SCRIPT_DIR/target/pfxprobe-1.0.jar" "$@"
+          ${pkgs.temurin-bin-21}/bin/java -jar "$SCRIPT_DIR/target/pfxprobe-1.0.jar" "$@"
         '';
 
         pp-test = pkgs.writeShellScriptBin "pp-test" ''
@@ -40,7 +40,7 @@
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             maven
-            jdk11
+            temurin-bin-21
             pp
             pp-test
             pp-test-coverage
