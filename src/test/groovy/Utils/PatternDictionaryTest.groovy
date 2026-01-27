@@ -39,7 +39,6 @@ class PatternDictionaryTest extends Specification {
             "file-not-formatted"            : /def someMethod(){}/,
             "deprecated-api-getelement"     : /api.getElement("SomeElement")/,
             "deprecated-api-input"          : /api.input("SomeInput")/,
-            "deprecated-list-add"           : /list.add(someValue")/,
             "deprecated-map-put"            : /map.put("key", someValue")/,
     ]
 }

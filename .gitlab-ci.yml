@@ -42,7 +42,7 @@ unit-tests:
 
 report-coverage:
   stage: report
-  image: haynes/jacoco2cobertura:1.0.4
+  image: haynes/jacoco2cobertura:1.0.11
   only:
     - merge_requests
     - develop
@@ -89,7 +89,7 @@ publish-maven:
     - execution-test
     - package
   script:
-    - 'mvn deploy -s src/main/assembly/ci_settings.xml'
+    - "mvn deploy -s src/main/assembly/ci_settings.xml"
   only:
     - master
 
@@ -139,7 +139,6 @@ deploy-idea-xml:
         - src/main/resources/IDEA/inspections/Pricefx_Configuration.xml
   script:
     - echo "Publishing Pricefx_Configuration.xml to https://developer.pricefx.eu/studio/codenarc/Pricefx_Configuration.xml"
-
 
 .with-dind:
   variables:

@@ -27,13 +27,6 @@ class PatternDictionary {
                         "major",
                         "Style"
                 ),
-                new PfxProbeIssuePattern(
-                        "deprecated-list-add",
-                        "PFX - Use 'list << value' groovy operator instead",
-                        /\w*\.add\(/,
-                        "minor",
-                        "Style"
-                ),
         ]
     }
 }

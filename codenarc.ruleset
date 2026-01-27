@@ -224,14 +224,14 @@ ruleset {
     SpaceAfterMethodCallName
     SpaceAfterMethodDeclarationName
     SpaceAfterNotOperator
-    SpaceAfterOpeningBrace
+    //SpaceAfterOpeningBrace
     SpaceAfterSemicolon
     SpaceAfterSwitch
     SpaceAfterWhile
     SpaceAroundClosureArrow
     // SpaceAroundMapEntryColon // Conflicts with IntelliJ autoformatting of maps
     SpaceAroundOperator
-    SpaceBeforeClosingBrace
+    //SpaceBeforeClosingBrace
     SpaceBeforeOpeningBrace
     SpaceInsideParentheses
     TrailingWhitespace
