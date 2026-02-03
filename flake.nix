@@ -43,44 +43,105 @@
             description = "Build & run the ${pname} java binary application";
             script = ''
               set -e
-              JAR_NAME="${pname}-${pversion}.jar"
-              JAR_PATH="$(pwd)/target/$JAR_NAME"
+              JAR_PATH="$(pwd)/build/result/repo/${pname}-${pversion}.jar"
 
               if [ ! -f "$JAR_PATH" ]; then
                 echo "Jar not found, packaging first"
-                ${aliases.nxjar.script}
+                ${aliases.nxpackage-jar.script}
               fi
 
               ${pkgs.temurin-bin-21}/bin/java -jar "$JAR_PATH" "$@"
             '';
           };
 
-          nxjar = {
-            description = "Build maven/jar package locally (runs tests)";
-            script = ''
-              set -e
-              mvn clean package
-            '';
-          };
-
-          nxdist = {
-            description = "Build nix packages and run distribution tests";
-            script = ''
-              set -e
-              echo "Building default package..."
-              nix build .#default --out-link result-default
-              echo "Building docker package..."
-              nix build .#docker --out-link result-docker
-              echo ""
-              ${aliases.nxdist-test.script}
-            '';
-          };
-
-          nxdist-test = {
+          nxpackage-test = {
             description = "Test built JAR and Docker distributions";
             script = ''
               set -e
-              ./scripts/test-distributions.sh
+              docker load -i build/result-docker
+              ./scripts/test-packages.sh
+            '';
+          };
+
+          nxpackage-jar = {
+            description = "Build JAR distribution via nix";
+            script = ''
+              set -e
+              mkdir -p build
+              nix build .#default --out-link build/result
+              echo "JAR built at: build/result/repo/${pname}-${pversion}.jar"
+            '';
+          };
+
+          nxpackage-docker = {
+            description = "Build Docker archive via nix";
+            script = ''
+              set -e
+              mkdir -p build
+              nix build .#docker --out-link build/result-docker-link
+              # Copy the actual file (not symlink) for GitLab artifacts
+              cp build/result-docker-link build/result-docker
+              echo "Docker archive built at: build/result-docker"
+            '';
+          };
+
+          nxpackage = {
+            description = "Build all packages (JAR and Docker) and test execute them";
+            script = ''
+              set -e
+              ${aliases.nxpackage-jar.script}
+              ${aliases.nxpackage-docker.script}
+              ${aliases.nxpackage-test.script}
+            '';
+          };
+
+          nxtest = {
+            description = "Run unit tests";
+            script = ''
+              set -e
+              # Run tests without clean to avoid conflicts with nix build outputs
+              mvn test --batch-mode
+            '';
+          };
+
+          nxpublish = {
+            description = "Publish to Maven repository";
+            script = ''
+              set -e
+              mvn deploy -s src/main/assembly/ci_settings.xml
+            '';
+          };
+
+          nxci-push = {
+            description = "Push Docker image to registry (CI)";
+            script = ''
+              set -e
+              if [ -z "''${CI_COMMIT_REF_NAME:-}" ]; then
+                echo "Error: This script is only for CI environments (CI_COMMIT_REF_NAME not set)"
+                exit 1
+              fi
+
+              # Create policy.json for skopeo if not present
+              mkdir -p /etc/containers
+              echo '{"default":[{"type":"insecureAcceptAnything"}]}' > /etc/containers/policy.json
+
+              APP_VERSION=$(grep -oP '(?<=<version>)[^<]+' pom.xml | head -1)
+              BRANCH_TAG=''${CI_COMMIT_REF_NAME:-latest}
+              BRANCH_TAG=''${BRANCH_TAG/master/latest}
+
+              echo "Pushing Docker image with tags - version=$APP_VERSION branch=$BRANCH_TAG"
+
+              if [ "''${CI_COMMIT_REF_NAME:-}" = "master" ]; then
+                echo "Pushing version tag - ''${DOCKER_REGISTRY}:$APP_VERSION"
+                skopeo copy docker-archive:build/result-docker \
+                  docker://''${DOCKER_REGISTRY}:$APP_VERSION \
+                  --dest-creds ''${DOCKER_USER}:''${DOCKER_PASS}
+              fi
+
+              echo "Pushing branch tag - ''${DOCKER_REGISTRY}:$BRANCH_TAG"
+              skopeo copy docker-archive:build/result-docker \
+                docker://''${DOCKER_REGISTRY}:$BRANCH_TAG \
+                --dest-creds ''${DOCKER_USER}:''${DOCKER_PASS}
             '';
           };
         };
@@ -120,7 +181,7 @@
           ];
           buildPhase = ''
             export HOME=$TMPDIR
-            mvn clean package -DskipTests -Dmaven.repo.local=$TMPDIR/.m2/repository
+            mvn clean package -Dmaven.repo.local=$TMPDIR/.m2/repository
           '';
           installPhase = ''
             mkdir -p $out
@@ -137,31 +198,42 @@
         packages.default = pfxprobe;
 
         # Docker image using eclipse-temurin base (matching original Dockerfile)
+        # NOTE: We install to /opt/pfxprobe to avoid overwriting /bin from base image
+        # (which contains /bin/sh needed by GitLab Runner)
         packages.docker = pkgs.dockerTools.buildImage {
           name = pname;
           tag = pversion;
           fromImage = pkgs.dockerTools.pullImage {
             imageName = "eclipse-temurin";
             imageDigest = "sha256:cc11c035bb25cc709d7b1e3f43cbff15d69e06e2dba23eec431b64627d27e705";
-            hash = "sha256-vIQE6HDXEvAYi6yeQFxT+gpo+k2hQRvie3GplDdB2KY=";
+            hash =
+              {
+                aarch64-darwin = "sha256-vIQE6HDXEvAYi6yeQFxT+gpo+k2hQRvie3GplDdB2KY=";
+                x86_64-linux = "sha256-k0XrQYpp33yKL9bUg2hEh8Ng5vca4BlhPsryBLiRcSk=";
+                aarch64-linux = ""; # add once known/needed
+                x86_64-darwin = ""; # add once known/needed
+              }
+              .${system};
           };
           copyToRoot = pkgs.buildEnv {
             name = "image-root";
             paths = [
-              self.packages.${system}.default
+              # Install pfxprobe to /opt/pfxprobe instead of root to avoid shadowing /bin
+              (pkgs.runCommand "pfxprobe-opt" { } ''
+                mkdir -p $out/opt/pfxprobe
+                cp -r ${self.packages.${system}.default}/* $out/opt/pfxprobe/
+              '')
               (pkgs.runCommand "rulesets" { } ''
                 mkdir -p $out
-                cp ${./codenarc.ruleset} $out/
-                cp ${./codenarc_accelerator.ruleset} $out/
+                cp ${./codenarc.ruleset} $out/codenarc.ruleset
+                cp ${./codenarc_accelerator.ruleset} $out/codenarc_accelerator.ruleset
               '')
             ];
           };
           config = {
-            Cmd = [ "${self.packages.${system}.default}/bin/pfxprobe" ];
+            WorkingDir = "/";
             Env = [
-              "PATH=${
-                self.packages.${system}.default
-              }/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+              "PATH=/opt/pfxprobe/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
             ];
           };
         };
@@ -180,6 +252,9 @@
             aliasBins
             maven
             temurin-bin-21
+            docker
+            util-linux
+            skopeo
           ];
         };
       }

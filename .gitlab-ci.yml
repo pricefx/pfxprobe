@@ -1,145 +1,34 @@
-image: maven:3.9-eclipse-temurin-21
-
-before_script:
-  - hostname
-  - whoami
-  - env
+image: nixos/nix:latest
 
 variables:
-  MAVEN_CLI_OPTS: "--batch-mode"
+  DOCKER_REGISTRY_IMAGE: "index.docker.io/pricefx/pfxprobe"
 
 stages:
-  - test
-  - report
-  - package
+  - build
   - publish
 
-execution-test:
-  stage: test
-  only:
-    - merge_requests
-    - develop
-    - master
-    - release/accelerator
-  script:
-    - mvn package exec:java -Dexec.mainClass=Main -Dexec.args="-dir . -rulefile ./codenarc.ruleset"
+# =============================================================================
+# REUSABLE DEFINITIONS
+# =============================================================================
 
-unit-tests:
-  stage: test
-  only:
-    - merge_requests
-    - develop
-    - master
-    - release/accelerator
-  script:
-    - mvn clean test -e $MAVEN_CLI_OPTS
-  artifacts:
-    paths:
-      - ./target/site/jacoco/jacoco.xml
-    reports:
-      junit:
-        - ./target/surefire-reports/TEST-*.xml
+# Branch patterns for CI job filtering
+.dev_branches: &dev_branches
+  - merge_requests
+  - release/accelerator
+  - develop
+  - master
 
-report-coverage:
-  stage: report
-  image: haynes/jacoco2cobertura:1.0.11
-  only:
-    - merge_requests
-    - develop
-    - master
-    - release/accelerator
-  needs:
-    - unit-tests
-    - execution-test
-  dependencies:
-    - unit-tests
-    - execution-test
-  script:
-    - python /opt/cover2cover.py target/site/jacoco/jacoco.xml src/main/groovy > target/site/coverage.xml
-    - python /opt/source2filename.py target/site/coverage.xml
-    - sed -i "s=<source>.*</source>=<source>./</source>=g" target/site/coverage.xml
-  artifacts:
-    paths:
-      - target/site/coverage.xml
-    reports:
-      coverage_report:
-        coverage_format: cobertura
-        path: target/site/coverage.xml
-  coverage: /<coverage.*line-rate="(\d+.?\d*)/
+.release_branches: &release_branches
+  - develop
+  - master
 
-package:
-  stage: package
-  needs:
-    - unit-tests
-    - execution-test
-  only:
-    - develop
-    - master
-    - release/accelerator
-  script:
-    - mvn package
-  artifacts:
-    paths:
-      - target/distribution
-
-publish-maven:
-  stage: publish
-  needs:
-    - unit-tests
-    - execution-test
-    - package
-  script:
-    - "mvn deploy -s src/main/assembly/ci_settings.xml"
-  only:
-    - master
-
-build-private-image:
-  stage: publish
-  needs:
-    - unit-tests
-    - execution-test
-    - package
-  image: docker:19.03.8
-  only:
-    - master
-  extends: .with-dind
+# Setup Nix with flakes enabled
+.setup-nix:
   before_script:
-    - export DOCKER_IMAGE_TAG=latest
-  script:
-    - docker info
-    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-    - docker pull $CI_REGISTRY_IMAGE:latest || true
-    - docker build --tag $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
-    - docker push $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG
+    - echo "experimental-features = nix-command flakes" >> /etc/nix/nix.conf
+    - nix --version
 
-build-public-image:
-  stage: publish
-  image: cregistry.pricefx.eu/docker-images/docker-with-buildx:v1.0.0
-  only:
-    - master
-  extends: .with-dind
-  before_script:
-    - export DOCKER_REGISTRY_IMAGE=index.docker.io/pricefx/pfxprobe
-    - export DOCKER_IMAGE_TAG=latest
-  script:
-    - docker info
-    - echo -n $DOCKER_HUB_TOKEN | docker login -u pricefx --password-stdin docker.io
-    - docker pull $DOCKER_REGISTRY_IMAGE:latest || true
-    - docker build --tag $DOCKER_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
-    - docker push $DOCKER_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG
-
-deploy-idea-xml:
-  stage: publish
-  artifacts:
-    paths:
-      - "src/main/resources/IDEA/inspections/Pricefx_Configuration.xml"
-  rules:
-    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
-      changes:
-        - src/main/resources/IDEA/inspections/Pricefx_Configuration.xml
-  script:
-    - echo "Publishing Pricefx_Configuration.xml to https://developer.pricefx.eu/studio/codenarc/Pricefx_Configuration.xml"
-
+# Docker-in-Docker service configuration
 .with-dind:
   variables:
     DOCKER_HOST: tcp://docker:2376
@@ -147,10 +36,97 @@ deploy-idea-xml:
     DOCKER_TLS_VERIFY: 1
     DOCKER_CERT_PATH: "/certs/client"
   services:
-    - name: docker:19.03.8-dind
+    - name: docker:24-dind
       command:
         - /bin/sh
         - -c
         - |
           echo "$CI_SERVER_TLS_CA_FILE" > /etc/ssl/certs/ca-cert-gitlab.pricefx.eu.crt || exit
           dockerd-entrypoint.sh || exit
+
+# =============================================================================
+# BUILD STAGE
+# =============================================================================
+
+test:
+  stage: build
+  extends: .setup-nix
+  only: *dev_branches
+  script:
+    - nix develop --command nxtest
+  artifacts:
+    reports:
+      junit:
+        - ./target/surefire-reports/TEST-*.xml
+
+package:
+  stage: build
+  extends:
+    - .setup-nix
+    - .with-dind
+  only: *dev_branches
+  before_script:
+    - echo "experimental-features = nix-command flakes" >> /etc/nix/nix.conf
+    - nix --version
+    - |
+      echo "Waiting for Docker to be ready..."
+      for i in $(seq 1 30); do
+        if docker info > /dev/null 2>&1; then
+          echo "Docker is ready!"
+          break
+        fi
+        echo "Docker not ready yet, waiting... ($i/30)"
+        sleep 2
+      done
+  script:
+    - nix develop --command nxpackage
+  artifacts:
+    paths:
+      - build/result
+      - build/result-docker
+
+# =============================================================================
+# PUBLISH STAGE
+# =============================================================================
+
+publish-maven:
+  stage: publish
+  extends: .setup-nix
+  needs:
+    - test
+    - package
+  only: *release_branches
+  script:
+    - nix develop --command nxpublish
+
+push-private-image:
+  stage: publish
+  extends: .setup-nix
+  needs:
+    - test
+    - package
+  dependencies:
+    - package
+  only: *release_branches
+  variables:
+    DOCKER_REGISTRY: $CI_REGISTRY_IMAGE
+    DOCKER_USER: gitlab-ci-token
+    DOCKER_PASS: $CI_JOB_TOKEN
+  script:
+    - nix develop --command nxci-push
+
+push-public-image:
+  stage: publish
+  extends: .setup-nix
+  needs:
+    - test
+    - package
+  dependencies:
+    - package
+  only: *release_branches
+  variables:
+    DOCKER_REGISTRY: $DOCKER_REGISTRY_IMAGE
+    DOCKER_USER: pricefx
+    DOCKER_PASS: $DOCKER_HUB_TOKEN
+  script:
+    - nix develop --command nxci-push
