@@ -1,9 +1,39 @@
+/*
+ * CodeNarc RuleSet Configuration
+ * =============================
+ *
+ * PRIORITY LEVELS (severity):
+ *   1 = High (critical issues)
+ *   2 = Medium (standard issues)
+ *   3 = Low (minor/style issues)
+ *
+ * PRIORITY TO REPORT SEVERITY MAPPING:
+ *   CodeNarc Priority 1 → critical
+ *   CodeNarc Priority 2 → major
+ *   CodeNarc Priority 3 → minor
+ *   (Note: 'info' and 'blocker' severities are not used by CodeNarc rules)
+ *
+ * CONFIGURATION SYNTAX:
+ *   RuleName                    // Use default settings
+ *   RuleName { ... }            // Configure with properties
+ *   RuleName(priority:1)        // Shorthand for priority only
+ *   // RuleName                  // Commented out = disabled
+ *
+ * COMMON PROPERTIES:
+ *   priority                    // 1, 2, or 3
+ *   enabled                     // true/false (default: true)
+ *   applyToFileNames            // Pattern for files to check (e.g., '*.groovy')
+ *   doNotApplyToFileNames       // Pattern for files to exclude (e.g., '*Test.groovy')
+ *   regex                       // For naming rules, validation pattern
+ *
+ * For full documentation: https://codenarc.org/
+ */
+
 ruleset {
 
     description '''
-        A Sample Groovy RuleSet containing all CodeNarc Rules, grouped by category.
-        You can use this as a template for your own custom RuleSet.
-        Just delete the rules that you don't want to include.
+        Pricefx CodeNarc RuleSet - maintained by the Competency Leads team.
+        Contains selected CodeNarc rules with custom configurations for Pricefx projects.
         '''
 
     // rulesets/basic.xml
@@ -110,11 +140,11 @@ ruleset {
     CouldBeSwitchStatement
     // FieldTypeRequired // we can't use class fields - will cause some weird errors
     HashtableIsObsolete
-    IfStatementCouldBeTernary
+    // IfStatementCouldBeTernary // See PFAUT-1244
     // ImplicitClosureParameter
     ImplicitReturnStatement
     InvertedCondition
-    InvertedIfElse
+    InvertedIfElse(priority:1)
     LongLiteralWithLowerCaseL
     MethodParameterTypeRequired
     MethodReturnTypeRequired {
@@ -190,7 +220,7 @@ ruleset {
     ReturnNullFromCatchBlock
     // SwallowThreadDeath
     // ThrowError // We can't have our own exception types, so we may need some generic types
-    ThrowException
+    //ThrowException // See PFAUT-1244
     ThrowNullPointerException
     ThrowRuntimeException {
         doNotApplyToFileNames = '*Test.groovy'
@@ -200,7 +230,7 @@ ruleset {
     // rulesets/formatting.xml
     // BlankLineBeforePackage
     BlockEndsWithBlankLine
-    BlockStartsWithBlankLine
+    BlockStartsWithBlankLine(priority:1)
     BracesForClass
     BracesForForLoop
     BracesForIfElse
@@ -216,18 +246,21 @@ ruleset {
     MissingBlankLineAfterImports
     MissingBlankLineAfterPackage
     MissingBlankLineBeforeAnnotatedField
-    SpaceAfterCatch
-    SpaceAfterClosingBrace
-    SpaceAfterComma
-    SpaceAfterFor
-    SpaceAfterIf
-    SpaceAfterMethodCallName
-    SpaceAfterMethodDeclarationName
-    SpaceAfterNotOperator
-    //SpaceAfterOpeningBrace
-    SpaceAfterSemicolon
-    SpaceAfterSwitch
-    SpaceAfterWhile
+
+    // SEE PFAUT-1244, DISABLED ALL SpaceAfter rules as IntelliJ can't autoformat them, so we can't enforce them
+    // SpaceAfterCatch
+    // SpaceAfterClosingBrace
+    // SpaceAfterComma
+    // SpaceAfterFor
+    // SpaceAfterIf
+    // SpaceAfterMethodCallName
+    // SpaceAfterMethodDeclarationName
+    // SpaceAfterNotOperator
+    // SpaceAfterOpeningBrace
+    // SpaceAfterSemicolon
+    // SpaceAfterSwitch
+    // SpaceAfterWhile
+
     SpaceAroundClosureArrow
     // SpaceAroundMapEntryColon // Conflicts with IntelliJ autoformatting of maps
     SpaceAroundOperator
@@ -268,7 +301,7 @@ ruleset {
     // rulesets/groovyism.xml
     AssignCollectionSort
     AssignCollectionUnique
-    ClosureAsLastMethodParameter
+    //ClosureAsLastMethodParameter // See PFAUT-1244
     CollectAllIsDeprecated
     ConfusingMultipleReturns
     ExplicitArrayListInstantiation
@@ -404,7 +437,9 @@ ruleset {
     ClassSize
     // CrapMetric   // Requires the GMetrics jar and a Cobertura coverage file - we don't have coverage
     CyclomaticComplexity   // Requires the GMetrics jar
-    MethodCount
+    MethodCount {
+      maxMethods = 50 // See PFAUT-1244
+    }
     MethodSize
     NestedBlockDepth
 //     ParameterCount
@@ -455,8 +490,8 @@ ruleset {
     UnnecessarySemicolon
     // UnnecessarySetter // Seems faulty. Will also catch keys in maps when values are closures
     UnnecessaryStringInstantiation
-    UnnecessaryTernaryExpression
-    UnnecessaryToString
+    UnnecessaryTernaryExpression(priority:1)
+    UnnecessaryToString(priority:1)
     // UnnecessaryTransientModifier
 
     // rulesets/unused.xml
