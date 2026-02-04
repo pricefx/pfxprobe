@@ -4,3 +4,4 @@ codeclimate.json
 *.iml
 .direnv
 CodeNarcCodeJsonReport.json
+build/*
