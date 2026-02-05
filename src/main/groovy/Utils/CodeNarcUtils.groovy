@@ -111,8 +111,6 @@ class CodeNarcUtils {
         return codeNarcReport.packages.inject([]) { List results, Map pathReport ->
             pathReport.files?.each { Map fileReport ->
                 String filePath = "${pathReport.path}/${fileReport.name}"
-                println("Translating report for ${filePath}")
-
                 fileReport.violations?.each { Map violation ->
                     results << new CodeNarcIssue(violation.ruleName, filePath, violation.priority, violation.lineNumber ?: 0, violation.message)
                 }

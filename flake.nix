@@ -40,17 +40,10 @@
           };
 
           nxdev = {
-            description = "Build & run the ${pname} java binary application";
+            description = "Build & run the ${pname} java package with maven, useful for developer iteration";
             script = ''
               set -e
-              JAR_PATH="$(pwd)/build/result/repo/${pname}-${pversion}.jar"
-
-              if [ ! -f "$JAR_PATH" ]; then
-                echo "Jar not found, packaging first"
-                ${aliases.nxpackage-jar.script}
-              fi
-
-              ${pkgs.temurin-bin-21}/bin/java -jar "$JAR_PATH" "$@"
+              mvn package exec:java -Dexec.mainClass=Main -Dexec.args="-dir fixtures -qualitygate critical"
             '';
           };
 

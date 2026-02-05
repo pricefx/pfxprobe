@@ -103,7 +103,7 @@ class ReportUtilsTest extends Specification {
 
         then:
         def output = buffer.toString()
-        output.contains("📋 Summary by check:")
+        output.contains("📋 Summary by rule:")
         output.contains("TestRule1:")
         output.contains("TestRule2:")
     }
@@ -121,8 +121,7 @@ class ReportUtilsTest extends Specification {
 
         then:
         def output = buffer.toString()
-        output.contains("🔴 [MAJOR] TestRule")
+        output.contains("🔴 TestRule: [major]")
         output.contains("📄 path/to/file.groovy:42")
-        output.contains("💬 [major] This is a test issue")
     }
 }

@@ -30,6 +30,8 @@ class ReportUtils {
     }
 
     static void printQualityGateReport(List<PfxProbeIssue> codeIssues, String minSeverity = "info") {
+        println ""
+
         if (codeIssues.isEmpty()) {
             println "✅ No code quality issues found!"
             return
@@ -46,16 +48,11 @@ class ReportUtils {
         codeIssues.each { issue ->
             Map<String, Object> format = issue.getCodeClimateIssueFormat()
             
-            println "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-            println ""
-            println "  🔴 [${issue.getIssueSeverity().toUpperCase()}] ${format.check_name}"
+            println "  🔴 ${format.check_name}: ${issue.getIssueDescription()}"
             println "  📄 ${format.location.path}:${format.location.lines.begin}"
-            println "  💬 ${issue.getIssueDescription()}"
-            println ""
         }
 
         // Print summaries
-        println "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         println ""
         println "📊 Summary by severity:"
         
@@ -68,7 +65,7 @@ class ReportUtils {
         }
 
         println ""
-        println "📋 Summary by check:"
+        println "📋 Summary by rule:"
         
         Map<String, Integer> checkCounts = codeIssues
             .groupBy { it.getCodeClimateIssueFormat().check_name }
