@@ -7,7 +7,7 @@
     <groupId>net.pricefx.tools</groupId>
     <artifactId>pfxprobe</artifactId>
     <packaging>jar</packaging>
-    <version>1.2</version>
+    <version>1.2.1</version>
     <name>${project.artifactId}</name>
 
     <properties>
@@ -158,6 +158,31 @@
                         <goals>
                             <goal>add-third-party</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.6.1</version>
+                <executions>
+                    <execution>
+                        <id>add-codenarc-ruleset</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}</directory>
+                                    <includes>
+                                        <include>codenarc.ruleset</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

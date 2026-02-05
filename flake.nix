@@ -82,6 +82,7 @@
             description = "Build all packages (JAR and Docker) and test execute them";
             script = ''
               set -e
+              rm -rf build
               ${aliases.nxpackage-jar.script}
               ${aliases.nxpackage-docker.script}
               ${aliases.nxpackage-test.script}
@@ -190,9 +191,7 @@
         # Default package - the Maven distribution
         packages.default = pfxprobe;
 
-        # Docker image using eclipse-temurin base (matching original Dockerfile)
-        # NOTE: We install to /opt/pfxprobe to avoid overwriting /bin from base image
-        # (which contains /bin/sh needed by GitLab Runner)
+        # Docker image using eclipse-temurin base
         packages.docker = pkgs.dockerTools.buildImage {
           name = pname;
           tag = pversion;
@@ -211,23 +210,17 @@
           copyToRoot = pkgs.buildEnv {
             name = "image-root";
             paths = [
-              # Install pfxprobe to /opt/pfxprobe instead of root to avoid shadowing /bin
-              (pkgs.runCommand "pfxprobe-opt" { } ''
+              (pkgs.runCommand "pfxprobe-bin" { } ''
                 mkdir -p $out/opt/pfxprobe
                 cp -r ${self.packages.${system}.default}/* $out/opt/pfxprobe/
-              '')
-              (pkgs.runCommand "rulesets" { } ''
-                mkdir -p $out
-                cp ${./codenarc.ruleset} $out/codenarc.ruleset
-                cp ${./codenarc_accelerator.ruleset} $out/codenarc_accelerator.ruleset
+                mkdir -p $out/usr/bin
+                ln -s /opt/pfxprobe/bin/${pname} $out/usr/bin/${pname}
               '')
             ];
           };
           config = {
             WorkingDir = "/";
-            Env = [
-              "PATH=/opt/pfxprobe/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-            ];
+            Cmd = [ "/usr/bin/${pname}" ];
           };
         };
 

@@ -9,30 +9,40 @@ class CodeNarcUtils {
 
     /**
      * Resolves the default ruleset file path.
-     * Checks if the absolute path exists (Docker/CI environment), otherwise uses relative path (local development).
+     * Uses local ruleset if present, otherwise falls back to embedded ruleset.
      */
     private static String getDefaultRulesFilePath() {
-        final String absolutePath = "/codenarc.ruleset"
         final String relativePath = "./codenarc.ruleset"
-        
-        boolean absoluteExists = new File(absolutePath).exists()
-        boolean relativeExists = new File(relativePath).exists()
-        
-        println("DEBUG: Checking ruleset paths - absolute [$absolutePath] exists: $absoluteExists, relative [$relativePath] exists: $relativeExists")
-        
-        if (absoluteExists) {
-            println("DEBUG: Using absolute path: $absolutePath")
-            return absolutePath
-        }
-        
-        if (relativeExists) {
-            println("DEBUG: Using relative path: $relativePath")
+
+        if (new File(relativePath).exists()) {
             return relativePath
         }
-        
-        // If neither exists, return absolute path (will be used in Docker/CI where it should exist)
-        println("DEBUG: Neither path exists, defaulting to absolute path: $absolutePath")
-        return absolutePath
+
+        String embeddedRulesetPath = writeEmbeddedRuleset()
+        if (embeddedRulesetPath) {
+            return embeddedRulesetPath
+        }
+
+        return relativePath
+    }
+
+    private static String writeEmbeddedRuleset() {
+        InputStream rulesetStream = CodeNarcUtils.class.getResourceAsStream("/codenarc.ruleset")
+
+        if (!rulesetStream) {
+            return null
+        }
+
+        File tempRuleset = File.createTempFile("codenarc", ".ruleset")
+        tempRuleset.deleteOnExit()
+
+        rulesetStream.withCloseable { input ->
+            tempRuleset.withOutputStream { output ->
+                output << input
+            }
+        }
+
+        return tempRuleset.absolutePath
     }
 
     static List<CodeNarcIssue> getCodeNarcIssues(String[] scanDirs, String userRulesFileRelativePath) {
