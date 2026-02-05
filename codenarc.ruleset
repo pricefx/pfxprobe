@@ -144,7 +144,7 @@ ruleset {
     // ImplicitClosureParameter
     ImplicitReturnStatement
     InvertedCondition
-    InvertedIfElse(priority:1)
+    InvertedIfElse(priority:3)
     LongLiteralWithLowerCaseL
     MethodParameterTypeRequired
     MethodReturnTypeRequired {
@@ -230,7 +230,7 @@ ruleset {
     // rulesets/formatting.xml
     // BlankLineBeforePackage
     BlockEndsWithBlankLine
-    BlockStartsWithBlankLine(priority:1)
+    BlockStartsWithBlankLine(priority:3)
     BracesForClass
     BracesForForLoop
     BracesForIfElse
@@ -492,8 +492,8 @@ ruleset {
     UnnecessarySemicolon
     // UnnecessarySetter // Seems faulty. Will also catch keys in maps when values are closures
     UnnecessaryStringInstantiation
-    UnnecessaryTernaryExpression(priority:1)
-    UnnecessaryToString(priority:1)
+    UnnecessaryTernaryExpression(priority:3)
+    UnnecessaryToString(priority:3)
     // UnnecessaryTransientModifier
 
     // rulesets/unused.xml

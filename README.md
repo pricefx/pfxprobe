@@ -125,12 +125,6 @@ pfxprobe:
 - Summary grouped by check type
 - Exit code 1 if threshold exceeded, 0 if passed
 
-## License
-
-[MIT License](https://opensource.org/licenses/MIT) - Copyright (c) 2026 Pricefx
-
-Third-party dependency licenses are listed in [LICENSES.txt](LICENSES.txt) 
-
 ## Additional Attributions
 
 * [Original project avatar image rights](https://www.flaticon.com/authors/icongeek26)
