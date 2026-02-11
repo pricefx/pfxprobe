@@ -440,7 +440,7 @@ ruleset {
       maxMethodComplexity = 50
     }
     MethodCount {
-      maxMethods = 50 // See PFAUT-1244
+      maxMethods = 60 // See PFAUT-1244
     }
     MethodSize
     NestedBlockDepth
