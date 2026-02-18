@@ -83,6 +83,7 @@
             script = ''
               set -e
               rm -rf build
+              git add .
               ${aliases.nxpackage-jar.script}
               ${aliases.nxpackage-docker.script}
               ${aliases.nxpackage-test.script}

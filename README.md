@@ -1,13 +1,18 @@
 # pfxprobe
-**pfxprobe** is a command line tool that is designed to scan a PriceFx configuration codebase and report
-commonly known malpractices recommended improvements. It is based loosely on [CodeClimate](https://github.com/codeclimate/codeclimate).
+**pfxprobe** scans Pricefx configuration code and reports common issues and improvement opportunities.
+It is based loosely on [CodeClimate](https://github.com/codeclimate/codeclimate).
 
-This tool will search for issues in the provided directories and generate a *codeclimate.json* report which can then
-be used in other tools, such as Gitlab CI for tracking Resolved / Newly Introduced issues between commits.
+Reports are written to `.pfxprobe/` in the working directory:
+- `.pfxprobe/codeclimate.json`
+- `.pfxprobe/codeclimate.sarif.json`
+- `.pfxprobe/pfxprobe-quality.md`
 
-There are two types of analysis available:
-1. **Probe** - Uses custom regex based rules created to handle PriceFX specific rules
-2. **Narc** - Uses generic Groovy static code analysis engine [CodeNarc](https://codenarc.org/). Default ruleset is based on the Accelerators team and can be modified with job configuration if necessary
+`-qualitygate` controls failure behavior only.
+The markdown quality report is always written and does not fail builds.
+
+There are two analysis types:
+1. **Probe** - Custom regex-based rules for Pricefx patterns
+2. **Narc** - Generic Groovy static analysis via [CodeNarc](https://codenarc.org/)
      
 ## Distribution and Usage
 
@@ -17,7 +22,7 @@ This project is distributed as:
 1. [Executable Binaries](https://gitlab.pricefx.eu/tools/pfxprobe/-/jobs/artifacts/master/browse/target/distribution?job=package)
 
 ### Gitlab CI Usage
-##### Add the following to your *.gilab-ci.yml* file:
+##### Add the following to your `.gitlab-ci.yml` file:
 
 ```
 stages:
@@ -34,9 +39,11 @@ pfxprobe:
   artifacts:
     when: always
     reports:
-      codequality: codeclimate.json
+      codequality: .pfxprobe/codeclimate.json
     paths:
-      - ./codeclimate.json
+      - ./.pfxprobe/codeclimate.json
+      - ./.pfxprobe/codeclimate.sarif.json
+      - ./.pfxprobe/pfxprobe-quality.md
 ```
 
 ### Docker Container Usage
@@ -62,15 +69,24 @@ Options:
   -p                    Execute pfxprobe analysis only
   -rulefile <arg>       Path to CodeNarc ruleset file (defaults to ./codenarc.ruleset)
   -qualitygate [level]  Enable quality gate mode with optional severity threshold
-                        Displays detailed report and fails build if issues found
-                        Valid levels: info, minor, major, critical, blocker
-                        Default: info (fails on any issue)
+                         Displays detailed report and fails build if issues found
+                         Valid levels: info, minor, major, critical
+                         Default: info (fails on any issue)
 
 Examples:
   java -jar pfxprobe.jar -dir .
   java -jar pfxprobe.jar -dir . -qualitygate
   java -jar pfxprobe.jar -dir . -qualitygate major
-  java -jar pfxprobe.jar -dir src -rulefile ./custom-rules.ruleset -qualitygate blocker
+  java -jar pfxprobe.jar -dir src -rulefile ./custom-rules.ruleset -qualitygate critical
+```
+
+### Local Maven Usage
+
+Direct Maven execution with JDK 21 + Maven installed:
+
+```bash
+mvn test
+mvn package exec:java -Dexec.mainClass=Main -Dexec.args="-dir fixtures"
 ```
 
 ### CLI Usage
@@ -84,27 +100,27 @@ Options:
   -p                    Execute pfxprobe analysis only
   -rulefile <arg>       Path to CodeNarc ruleset file (defaults to ./codenarc.ruleset)
   -qualitygate [level]  Enable quality gate mode with optional severity threshold
-                        Displays detailed report and fails build if issues found
-                        Valid levels: info, minor, major, critical, blocker
-                        Default: info (fails on any issue)
+                         Displays detailed report and fails build if issues found
+                         Valid levels: info, minor, major, critical
+                         Default: info (fails on any issue)
 
 Examples:
   pfxprobe -dir .
   pfxprobe -dir . -qualitygate
   pfxprobe -dir . -qualitygate major
-  pfxprobe -dir src -rulefile ./custom-rules.ruleset -qualitygate blocker
+  pfxprobe -dir src -rulefile ./custom-rules.ruleset -qualitygate critical
 ```
 
-### Quality Gate Feature
+### Quality Gate and Reports
 
-The quality gate feature provides enhanced reporting and enforces build failures based on code quality issues:
+`-qualitygate` prints a detailed console report and fails when issues are at or above the selected severity.
+Reports are still written regardless of gate usage.
 
 **Severity Levels** (from lowest to highest):
 - `info` - Informational issues
 - `minor` - Minor code quality issues
 - `major` - Significant issues that should be addressed
 - `critical` - Critical issues requiring immediate attention
-- `blocker` - Blocking issues that must be fixed
 
 **Usage in CI/CD:**
 ```yaml
@@ -116,7 +132,11 @@ pfxprobe:
   artifacts:
     when: always
     reports:
-      codequality: codeclimate.json
+      codequality: .pfxprobe/codeclimate.json
+    paths:
+      - ./.pfxprobe/codeclimate.json
+      - ./.pfxprobe/codeclimate.sarif.json
+      - ./.pfxprobe/pfxprobe-quality.md
 ```
 
 **Quality Gate Output:**
@@ -124,6 +144,11 @@ pfxprobe:
 - Summary grouped by severity level
 - Summary grouped by check type
 - Exit code 1 if threshold exceeded, 0 if passed
+
+**Quality Report Output:**
+- Markdown file at `.pfxprobe/pfxprobe-quality.md`
+- Includes issue list and severity/rule summaries
+- Never changes exit code
 
 ## Additional Attributions
 

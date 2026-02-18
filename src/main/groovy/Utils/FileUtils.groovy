@@ -6,21 +6,22 @@ class FileUtils {
     private static ConcurrentHashMap<File, Map<Integer, IntRange>> fileLinesCache = new ConcurrentHashMap<>()
 
     static Map<Integer, IntRange> getFileLines(File file) {
-        if (!fileLinesCache[file]) {
+        return fileLinesCache.computeIfAbsent(file) { File cachedFile ->
             int charCount = 0
             int lineCount = 1
             Map<Integer, IntRange> fileLines = [:]
-            file.eachLine { line ->
-                if (charCount != 0) //if not first line
-                    charCount++ // account for newLine char
+            cachedFile.eachLine { line ->
+                if (charCount != 0) {
+                    charCount++
+                }
 
                 fileLines[lineCount] = charCount..(charCount + line.size())
                 charCount += line.size()
                 lineCount++
             }
-            fileLinesCache[file] = fileLines
+
+            return fileLines
         }
-        return fileLinesCache[file]
     }
 
     static List<File> getGroovyFilesInPath(String searchPath, List<String> searchExclusions = null) {

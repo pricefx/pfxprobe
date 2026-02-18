@@ -23,7 +23,7 @@ class CommandLineUtils {
     final static String narcRulesFileDesc = "Path to ruleset file relative to project directory. By default Accelerators team ruleset is used. Custom configurations can be created using codenarc.ruleset file as a template"
 
     final static String qualityGateArg = "qualitygate"
-    final static String qualityGateDesc = "Enable quality gate mode: displays detailed issue report and fails if issues are found at or above the specified severity level. Valid levels: info, minor, major, critical, blocker. Defaults to 'info' (any issue fails)"
+    final static String qualityGateDesc = "Enable quality gate mode: displays detailed issue report and fails if issues are found at or above the specified severity level. Valid levels: info, minor, major, critical. Defaults to 'info' (any issue fails)"
 
 
     private static Options getParserOptions() {

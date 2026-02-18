@@ -26,13 +26,17 @@ class PfxProbeIssuePattern {
     List<String> Categories
 
     List<PfxProbeIssue> findOccurrencesInFile(File file) {
+        return findOccurrencesInFile(file, file.text, FileUtils.getFileLines(file))
+    }
+
+    List<PfxProbeIssue> findOccurrencesInFile(File file, String fileContent, Map<Integer, IntRange> fileLines) {
         List<PfxProbeIssue> allIssues = []
-        Matcher matcher = file.text =~ Pattern
+        Matcher matcher = fileContent =~ Pattern
         matcher.results().each { match ->
-            Integer lineBegin = FileUtils.getFileLines(file).find {
+            Integer lineBegin = fileLines.find {
                 it.value.fromInt <= match.start() && it.value.toInt >= match.start()
             }?.key
-            Integer lineEnd = FileUtils.getFileLines(file).find {
+            Integer lineEnd = fileLines.find {
                 it.value.toInt >= match.end()
             }?.key
 

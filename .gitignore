@@ -5,3 +5,4 @@ codeclimate.json
 .direnv
 CodeNarcCodeJsonReport.json
 build/*
+.pfxprobe

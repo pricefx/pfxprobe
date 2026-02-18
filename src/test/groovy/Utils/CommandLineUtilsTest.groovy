@@ -93,7 +93,6 @@ class CommandLineUtilsTest extends Specification {
         ["-dir", "ScanDirectory", "-qualitygate", "minor"] as String[]               | "minor"
         ["-dir", "ScanDirectory", "-qualitygate", "major"] as String[]               | "major"
         ["-dir", "ScanDirectory", "-qualitygate", "critical"] as String[]            | "critical"
-        ["-dir", "ScanDirectory", "-qualitygate", "blocker"] as String[]             | "blocker"
     }
 
     def "Probe Analysis Is Triggered Under Proper Conditions"() {

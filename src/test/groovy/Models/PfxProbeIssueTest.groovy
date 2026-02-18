@@ -10,7 +10,7 @@ class PfxProbeIssueTest extends Specification {
                 "Some Issue Pattern",
                 "Pattern Description",
                 /.*abc.*/,
-                "blocker"
+                "critical"
         )
         PfxProbeIssue codeIssue = new PfxProbeIssue(
                 issuePattern,
@@ -20,7 +20,7 @@ class PfxProbeIssueTest extends Specification {
                 15,
                 40
         )
-        Map expectedIssueFormat = [type: "issue", engine_name: "pfxprobe", check_name: "Some Issue Pattern", description: "[blocker] Pattern Description", severity: "blocker", categories: [], location: [path: "/var/some/path", lines: [begin: 0, end: 10], chars: [begin: 15, end: 40]], fingerprint: "b35193b423e3f3635638665377767678"]
+        Map expectedIssueFormat = [type: "issue", engine_name: "pfxprobe", check_name: "Some Issue Pattern", description: "[critical] Pattern Description", severity: "critical", categories: [], location: [path: "/var/some/path", lines: [begin: 0, end: 10], chars: [begin: 15, end: 40]], fingerprint: "b35193b423e3f3635638665377767678"]
 
         expect:
         codeIssue.getCodeClimateIssueFormat() == expectedIssueFormat

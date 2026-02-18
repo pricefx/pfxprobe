@@ -7,21 +7,14 @@ abstract class CodeClimateIssue implements Comparable {
             "info",
             "minor",
             "major",
-            "critical",
-            "blocker"
+            "critical"
     ]
-
-    final static String failureSeverity = "blocker"
 
     abstract String getIssueDescription()
 
     abstract String getIssueSeverity()
 
     abstract Map<String, Object> getCodeClimateIssueFormat()
-
-    boolean isFailingSeverity() {
-        severityImportance.findIndexOf { it == getIssueSeverity() } >= severityImportance.findIndexOf { it == failureSeverity }
-    }
 
     static String generateIssueFingerprint(String path, String name, String description) {
         byte[] b = [path, name, description].bytes.flatten()

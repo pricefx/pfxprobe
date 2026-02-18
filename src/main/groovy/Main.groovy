@@ -25,32 +25,42 @@ class Main {
         ReportUtils.printIssueDiscoveriesToConsole(allIssues)
         ReportUtils.writeCodeClimateReport(allIssues)
 
+        String qualitySeverity = cmd.hasOption(CommandLineUtils.qualityGateArg) ?
+                resolveAndValidateSeverity(cmd.getOptionValue(CommandLineUtils.qualityGateArg)) :
+                "info"
+        List<CodeClimateIssue> qualityReportIssues = filterIssuesBySeverity(allIssues, qualitySeverity)
+        ReportUtils.writeQualityMarkdownReport(qualityReportIssues, qualitySeverity)
+
         // Quality gate mode: print detailed report and fail if any issues found
         if (cmd.hasOption(CommandLineUtils.qualityGateArg)) {
-            String minSeverity = cmd.getOptionValue(CommandLineUtils.qualityGateArg) ?: "info"
-            
-            if (!CodeClimateIssue.severityImportance.contains(minSeverity)) {
-                throw new Exception("Invalid quality gate severity: ${minSeverity}. Valid values: ${CodeClimateIssue.severityImportance.join(', ')}")
-            }
-            
-            int minSeverityIndex = CodeClimateIssue.severityImportance.findIndexOf { it == minSeverity }
-            List<CodeClimateIssue> filteredIssues = allIssues.findAll { issue ->
-                int issueSeverityIndex = CodeClimateIssue.severityImportance.findIndexOf { it == issue.getIssueSeverity() }
-                issueSeverityIndex >= minSeverityIndex
-            }
-            
-            ReportUtils.printQualityGateReport(allIssues, minSeverity)
-            
-            if (!filteredIssues.isEmpty()) {
-                throw new Exception("Quality gate failed: found ${filteredIssues.size()} issue(s) at or above '${minSeverity}' severity")
-            }
-        }
+            ReportUtils.printQualityGateReport(allIssues, qualitySeverity)
 
-        // Check if failure severities are defined and fail job if matching issues are found
-        if (allIssues.any { issue -> issue.isFailingSeverity() }) {
-            throw new Exception("Found issue(s) >= ${CodeClimateIssue.failureSeverity} severity")
+            if (!qualityReportIssues.isEmpty()) {
+                throw new Exception("Quality gate failed: found ${qualityReportIssues.size()} issue(s) at or above '${qualitySeverity}' severity")
+            }
         }
 
         println("pfxprobe Finished...")
+    }
+
+    /** Resolves an optional severity and validates it against supported levels. */
+    private static String resolveAndValidateSeverity(String configuredSeverity) {
+        String minSeverity = configuredSeverity ?: "info"
+
+        if (!CodeClimateIssue.severityImportance.contains(minSeverity)) {
+            throw new Exception("Invalid quality severity: ${minSeverity}. Valid values: ${CodeClimateIssue.severityImportance.join(', ')}")
+        }
+
+        return minSeverity
+    }
+
+    /** Returns issues that meet or exceed the provided severity threshold. */
+    private static List<CodeClimateIssue> filterIssuesBySeverity(List<CodeClimateIssue> allIssues, String minSeverity) {
+        int minSeverityIndex = CodeClimateIssue.severityImportance.findIndexOf { it == minSeverity }
+
+        return allIssues.findAll { issue ->
+            int issueSeverityIndex = CodeClimateIssue.severityImportance.findIndexOf { it == issue.getIssueSeverity() }
+            issueSeverityIndex >= minSeverityIndex
+        }
     }
 }
