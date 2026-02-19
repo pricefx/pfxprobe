@@ -47,14 +47,22 @@ class CodeNarcUtils {
 
     static List<CodeNarcIssue> getCodeNarcIssues(String[] scanDirs, String userRulesFileRelativePath) {
         println("Starting codeNarc analysis")
+        File temporaryReportFile = File.createTempFile("pfxprobe-codenarc-", ".json")
+        temporaryReportFile.delete()
 
         if (scanDirs.size() > 1) {
             println("CodeNarc analysis will be executed only for the first provided input source directory")
         }
 
-        runAnalysis(scanDirs?.getAt(0), userRulesFileRelativePath)
+        runAnalysis(scanDirs?.getAt(0), userRulesFileRelativePath, temporaryReportFile.absolutePath)
 
-        ArrayList<CodeNarcIssue> codeNarcCodeIssues = parseReport() ?: []
+        ArrayList<CodeNarcIssue> codeNarcCodeIssues = []
+
+        try {
+            codeNarcCodeIssues = parseReport(temporaryReportFile.absolutePath) ?: []
+        } finally {
+            temporaryReportFile.delete()
+        }
 
         return codeNarcCodeIssues
     }
@@ -64,17 +72,17 @@ class CodeNarcUtils {
      * @param scanDir
      * @param userRulesFilePath String containing path to ruleset file. Relative to repository root directory or absolute.
      */
-    private static void runAnalysis(String scanDir, String userRulesFilePath) {
+    private static void runAnalysis(String scanDir, String userRulesFilePath, String reportFilePath) {
         String rulesFilePath = userRulesFilePath ?: getDefaultRulesFilePath()
 
-        safeExecuteAnalysisForDir(rulesFilePath, scanDir)
+        safeExecuteAnalysisForDir(rulesFilePath, scanDir, reportFilePath)
     }
 
-    private static void safeExecuteAnalysisForDir(String rulesFilePath, String scanDir) {
+    private static void safeExecuteAnalysisForDir(String rulesFilePath, String scanDir, String reportFilePath) {
         try {
             if (doesFileExist(scanDir)) {
                 // CodeNarc throws System.exit() if the basedir cannot be found, so we must make sure it's there
-                CodeNarc.main("-rulesetfiles=file:$rulesFilePath", "-basedir=$scanDir", "-report=json:$jsonCodeReportFileName")
+                CodeNarc.main("-rulesetfiles=file:$rulesFilePath", "-basedir=$scanDir", "-report=json:$reportFilePath")
             } else {
                 println("Basedir [$scanDir] doesn't exist in the workspace")
             }
@@ -85,8 +93,12 @@ class CodeNarcUtils {
     }
 
     private static List<CodeNarcIssue> parseReport() {
-        Map codeNarcReport = readReport()
-        println("Report [$jsonCodeReportFileName] parsed")
+        return parseReport(jsonCodeReportFileName)
+    }
+
+    private static List<CodeNarcIssue> parseReport(String reportFilePath) {
+        Map codeNarcReport = reportFilePath == jsonCodeReportFileName ? readReport() : readReport(reportFilePath)
+        println("Report [$reportFilePath] parsed")
 
         if (!codeNarcReport || !isAnyViolationFound(codeNarcReport)) {
             println("No violations found")
@@ -97,11 +109,15 @@ class CodeNarcUtils {
     }
 
     private static Map readReport() {
+        return readReport(jsonCodeReportFileName)
+    }
+
+    private static Map readReport(String reportFilePath) {
         Map report = [:]
-        if (doesFileExist(jsonCodeReportFileName)) {
-            report = new JsonSlurper().parse(new File(jsonCodeReportFileName))
+        if (doesFileExist(reportFilePath)) {
+            report = new JsonSlurper().parse(new File(reportFilePath))
         } else {
-            println("Report [$jsonCodeReportFileName] was not generated. Skipping...")
+            println("Report [$reportFilePath] was not generated. Skipping...")
         }
 
         return report
