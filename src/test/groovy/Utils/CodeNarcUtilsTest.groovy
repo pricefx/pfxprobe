@@ -145,33 +145,6 @@ class CodeNarcUtilsTest extends Specification {
         result == expected
     }
 
-    def "parseReport properly handles empty report"() {
-        given:
-        GroovySpy(CodeNarcUtils, global: true)
-        CodeNarcUtils.readReport() >> { [:] }
-
-        when:
-        def result = CodeNarcUtils.parseReport()
-
-        then:
-        result == []
-    }
-
-    def "parseReport doesn't early escape when report exists"() {
-        given:
-        List dummyReport = ["dummyReport"]
-
-        GroovySpy(CodeNarcUtils, global: true)
-        CodeNarcUtils.readReport() >> { [summary: [filesWithViolations: 10]] }
-        CodeNarcUtils.translateRawReport(_) >> { dummyReport }
-
-        when:
-        List result = CodeNarcUtils.parseReport()
-
-        then:
-        result == dummyReport
-    }
-
     def "isAnyViolationFound"() {
         when:
         boolean result = CodeNarcUtils.isAnyViolationFound(codeNarcReport)

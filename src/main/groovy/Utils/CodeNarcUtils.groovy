@@ -5,7 +5,6 @@ import groovy.json.JsonSlurper
 import org.codenarc.CodeNarc
 
 class CodeNarcUtils {
-    final static String jsonCodeReportFileName = 'CodeNarcCodeJsonReport.json'
 
     /**
      * Resolves the default ruleset file path.
@@ -92,12 +91,8 @@ class CodeNarcUtils {
         }
     }
 
-    private static List<CodeNarcIssue> parseReport() {
-        return parseReport(jsonCodeReportFileName)
-    }
-
     private static List<CodeNarcIssue> parseReport(String reportFilePath) {
-        Map codeNarcReport = reportFilePath == jsonCodeReportFileName ? readReport() : readReport(reportFilePath)
+        Map codeNarcReport = readReport(reportFilePath)
         println("Report [$reportFilePath] parsed")
 
         if (!codeNarcReport || !isAnyViolationFound(codeNarcReport)) {
@@ -106,10 +101,6 @@ class CodeNarcUtils {
         }
 
         return translateRawReport(codeNarcReport)
-    }
-
-    private static Map readReport() {
-        return readReport(jsonCodeReportFileName)
     }
 
     private static Map readReport(String reportFilePath) {
